@@ -38,7 +38,6 @@ public class EPubTest extends ClientAndLocalServerBase {
         String author = "Joske Vermeulen";
         String author2 = "Marieke Vermalen";
         String description = "Dit is een heel mooi boekske.";
-        String identifier = "urn:ean:1234-7956-1356-1123";
 
         File zippedHTMLFile = new File("src/test/resources/alice.zip");
         System.out.println("Converting " + zippedHTMLFile + " to EPUB format.");
@@ -52,7 +51,8 @@ public class EPubTest extends ClientAndLocalServerBase {
         metadata.setTitles(titles);
         metadata.setAuthors(authors);
         metadata.setDescription(description);
-        metadata.setIdentifier(identifier);
+        Identifier id = new Identifier(null, "urn:ean:1234-7956-1356-1123");
+        metadata.setIdentifier(id);
 
         Gson gson = new Gson();
 

@@ -10,9 +10,10 @@ import java.util.Calendar;
 public class Metadata {
     
     private ArrayList<String> titles, authors, illustrators, creators, subjects;
-    private String language, identifier, source, type, description, rights, coverImage;
+    private String language, source, type, description, rights, coverImage;
     private Calendar publicationDate;
     private ArrayList<Section> tableOfContents;
+    private Identifier identifier;
     
     public Metadata() {
         
@@ -66,11 +67,11 @@ public class Metadata {
         this.language = language;
     }
 
-    public String getIdentifier() {
+    public Identifier getIdentifier() {
         return identifier;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(Identifier identifier) {
         this.identifier = identifier;
     }
 

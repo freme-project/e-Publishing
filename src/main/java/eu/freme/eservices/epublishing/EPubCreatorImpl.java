@@ -53,9 +53,14 @@ public class EPubCreatorImpl implements EPubCreator {
             this.metadata.setLanguage(ourMetadata.getLanguage());
         }
 
-        //TODO
         if (ourMetadata.getIdentifier() != null) {
-            this.metadata.addIdentifier(new Identifier("test", ourMetadata.getIdentifier()));
+            String scheme = ourMetadata.getIdentifier().getScheme();
+            
+            if (scheme == null) {
+                scheme = "";
+            }
+            
+            this.metadata.addIdentifier(new Identifier(scheme, ourMetadata.getIdentifier().getValue()));
         }
 
         if (ourMetadata.getTitles() != null) {
