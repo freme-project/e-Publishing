@@ -10,7 +10,7 @@
 
 ### Build
 
-    cd e-Services/e-publishing
+    cd e-Publishing
 
 Normal build and packaging:
 
