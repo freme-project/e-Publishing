@@ -1,0 +1,6 @@
+eu/freme/eservices/epublishing/webservice/EPublish.class
+eu/freme/eservices/epublishing/webservice/Main.class
+eu/freme/eservices/epublishing/ZipProcessor.class
+eu/freme/eservices/epublishing/EPubCreatorImpl.class
+eu/freme/eservices/epublishing/EPublishingConfig.class
+eu/freme/eservices/epublishing/EPubCreator.class
