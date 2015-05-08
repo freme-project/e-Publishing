@@ -163,10 +163,8 @@ public class EPubCreatorImpl implements EPubCreator {
                 Section s;
                 if (parent == null || parent.equals("")) {
                     s = new Section(listOfFile.getName().substring(0, listOfFile.getName().lastIndexOf(".")), listOfFile.getName());
-                    //book.addSection(listOfFile.getName().substring(0, listOfFile.getName().lastIndexOf(".")), new Resource(new FileInputStream(listOfFile), listOfFile.getName()));
                 } else {
                     s = new Section(listOfFile.getName().substring(0, listOfFile.getName().lastIndexOf(".")), parent + File.separator + listOfFile.getName());
-                    //book.addSection(listOfFile.getName().substring(0, listOfFile.getName().lastIndexOf(".")), new Resource(new FileInputStream(listOfFile), parent + File.separator + listOfFile.getName()));
                 }
                 
                 sections.add(s);
