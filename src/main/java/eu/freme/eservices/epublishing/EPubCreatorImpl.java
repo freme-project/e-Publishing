@@ -11,7 +11,6 @@ import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.epub.BookProcessor;
 import nl.siegmann.epublib.epub.BookProcessorPipeline;
 import nl.siegmann.epublib.epub.EpubWriter;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
@@ -129,7 +128,7 @@ public class EPubCreatorImpl implements EPubCreator {
             TOCReference bookSection;
             if (parentSection == null) {
                 bookSection = book.addSection(section.getTitle(), resource);
-                System.out.println(section.getTitle());
+                //System.out.println(section.getTitle());
             } else {
                 bookSection = book.addSection(parentSection, section.getTitle(), resource);
             }
@@ -239,11 +238,11 @@ public class EPubCreatorImpl implements EPubCreator {
     }
 
     private String getBaseName(final String name) {
-        int slashIndex = name.indexOf('/');
+        int slashIndex = name.indexOf(File.separator);
         if (slashIndex == -1) {
             return name;
         } else {
-            return name.substring(name.lastIndexOf('/'));
+            return name.substring(name.lastIndexOf(File.separator));
         }
     }
 }

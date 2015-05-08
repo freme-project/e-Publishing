@@ -31,7 +31,7 @@ import org.apache.commons.io.FileUtils;
 @Path("epublish/html")
 public class EPublish {
 	private static final Logger logger = LoggerFactory.getLogger(EPublish.class);
-        private static final String tempFolderPath = "/tmp";
+        private static final String tempFolderPath = System.getProperty("java.io.tmpdir");
 
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)

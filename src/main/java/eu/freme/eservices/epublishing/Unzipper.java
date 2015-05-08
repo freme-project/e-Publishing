@@ -1,7 +1,6 @@
 package eu.freme.eservices.epublishing;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -35,7 +34,7 @@ public class Unzipper {
                 String fileName = ze.getName();
                 File newFile = new File(outputFolder + File.separator + fileName);
 
-                System.out.println("file unzip : " + newFile.getAbsoluteFile());
+                //System.out.println("file unzip : " + newFile.getAbsoluteFile());
 
                 //create all non exists folders
                 //else you will hit FileNotFoundException for compressed folder
@@ -55,7 +54,7 @@ public class Unzipper {
             zis.closeEntry();
             zis.close();
 
-            System.out.println("Done");
+            //System.out.println("Done");
 
         } catch (IOException ex) {
             System.out.println(ex);
