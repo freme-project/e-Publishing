@@ -63,6 +63,7 @@ public class EPubTest extends ClientAndLocalServerBase {
         FormDataMultiPart multiPart = new FormDataMultiPart();
         multiPart.bodyPart(ePubFilePart);			// add ePub
         multiPart.field("metadata", gson.toJson(metadata));
+        System.out.println(gson.toJson(metadata));
 
         // now send it to the service
         Response response = target.path("epublish/html").request().post(Entity.entity(multiPart, multiPart.getMediaType()));
