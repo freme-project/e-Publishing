@@ -7,3 +7,8 @@ nbactions.xml
 
 .idea
 *.iml
+
+# eclipse files
+.settings/
+.project
+.classpath
