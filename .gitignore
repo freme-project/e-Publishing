@@ -2,7 +2,13 @@ target/
 */.classpath
 */.project
 */.settings
-*/.idea
-*/*.iml
-logs/
+logs
 nbactions.xml
+
+.idea
+*.iml
+
+# eclipse files
+.settings/
+.project
+.classpath
