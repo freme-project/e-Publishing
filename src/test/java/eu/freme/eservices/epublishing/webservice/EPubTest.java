@@ -73,17 +73,17 @@ public class EPubTest extends ClientAndLocalServerBase {
         File ePubFile = File.createTempFile("alice", ".epub");
         System.out.println("Writing result to " + ePubFile);
         IOUtils.copy(in, new FileOutputStream(ePubFile));
-        
+
         //read file and perform checks
         EpubReader r = new EpubReader();
         Book b = r.readEpub(new FileInputStream(ePubFile));
         List<String> bookTitles = b.getMetadata().getTitles();
         List<Author> bookAuthors = b.getMetadata().getAuthors();
         List<String> bookAuthorsNames = new ArrayList<String>();
-        
-        bookAuthors.stream().forEach((a) -> {
+
+        for (Author a : bookAuthors) {
             bookAuthorsNames.add(a.getFirstname() + " " + a.getLastname());
-        });
+        }
 
         Assert.assertTrue(bookTitles.containsAll(titles));
         Assert.assertTrue(titles.containsAll(bookTitles));
@@ -111,7 +111,7 @@ public class EPubTest extends ClientAndLocalServerBase {
         toc.add(new Section("Chapter 1", "01.xhtml"));
         toc.add(new Section("Chapter 2", "02.xhtml"));
         metadata.setTableOfContents(toc);
-        
+
         Gson gson = new Gson();
 
         // create body part containing the ePub file
@@ -130,17 +130,17 @@ public class EPubTest extends ClientAndLocalServerBase {
         File ePubFile = File.createTempFile("alice", ".epub");
         System.out.println("Writing result to " + ePubFile);
         IOUtils.copy(in, new FileOutputStream(ePubFile));
-        
+
         //read file and perform checks
         EpubReader r = new EpubReader();
         Book b = r.readEpub(new FileInputStream(ePubFile));
         List<String> bookTitles = b.getMetadata().getTitles();
         List<Author> bookAuthors = b.getMetadata().getAuthors();
         List<String> bookAuthorsNames = new ArrayList<String>();
-        
-        bookAuthors.stream().forEach((a) -> {
+
+        for (Author a : bookAuthors) {
             bookAuthorsNames.add(a.getFirstname() + " " + a.getLastname());
-        });
+        }
 
         Assert.assertTrue("All titles are in the EPUB.", bookTitles.containsAll(titles));
         Assert.assertTrue("All EPUB titles are in the given titles.", titles.containsAll(bookTitles));
@@ -148,7 +148,7 @@ public class EPubTest extends ClientAndLocalServerBase {
         Assert.assertTrue("All authors are in the EPUB.", bookAuthorsNames.containsAll(authors));
         Assert.assertTrue("All EPUB authors are in the given authors.", authors.containsAll(bookAuthorsNames));
     }
-    
+
     @Test
     public void TestCoverImage() throws IOException {
         String title = "Alice in Utopia";
@@ -170,7 +170,7 @@ public class EPubTest extends ClientAndLocalServerBase {
         toc.add(new Section("Chapter 2", "02.xhtml"));
         metadata.setTableOfContents(toc);
         metadata.setCoverImage(coverImage);
-        
+
         Gson gson = new Gson();
 
         // create body part containing the ePub file
@@ -188,7 +188,7 @@ public class EPubTest extends ClientAndLocalServerBase {
         // write it to a (temporary) file
         File ePubFile = File.createTempFile("alice", ".epub");
         IOUtils.copy(in, new FileOutputStream(ePubFile));
-        
+
         //read file and perform checks
         EpubReader r = new EpubReader();
         Book b = r.readEpub(new FileInputStream(ePubFile));
