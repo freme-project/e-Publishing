@@ -22,6 +22,7 @@ public class ServiceRestController {
 
     @RequestMapping(value = "/e-publishing/html", method = RequestMethod.POST)
     public ResponseEntity<byte[]> htmlToEPub(@RequestParam("htmlZip") MultipartFile file, @RequestParam("metadata") String jMetadata) throws IOException {
+        //return null;
         return new ResponseEntity<>(entityAPI.createEPUB(jMetadata, file.getInputStream()), HttpStatus.OK);
     }
 

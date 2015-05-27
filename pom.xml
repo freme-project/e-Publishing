@@ -17,27 +17,27 @@
             <id>psiegman-repo</id>
             <url>https://github.com/psiegman/mvn-repo/raw/master/releases</url>
         </repository>
-<!--        <repository>
+        <!--        <repository>
             <id>spring-releases</id>
             <url>https://repo.spring.io/libs-release</url>
         </repository>-->
         
-		<repository>
-			<id>freme-release</id>
-			<name>freme-nexus</name>
-			<url>http://rv1443.1blu.de/nexus/content/repositories/releases/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>freme-nexus</id>
-			<name>freme-nexus</name>
-			<url>http://rv1443.1blu.de/nexus/content/repositories/snapshots/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
+        <repository>
+            <id>freme-release</id>
+            <name>freme-nexus</name>
+            <url>http://rv1443.1blu.de/nexus/content/repositories/releases/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>freme-nexus</id>
+            <name>freme-nexus</name>
+            <url>http://rv1443.1blu.de/nexus/content/repositories/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
     </repositories>
     
     <pluginRepositories>
@@ -47,7 +47,7 @@
         </pluginRepository>
     </pluginRepositories>
     
-<!--    <parent>
+    <!--    <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.2.3.RELEASE</version>
@@ -104,7 +104,7 @@
             <version>2.3.1</version>
         </dependency>
 
-        <dependency>
+<!--        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>4.0.0.RELEASE</version>
@@ -113,7 +113,29 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>4.0.0.RELEASE</version>
+        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>1.2.3.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>1.2.3.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j</artifactId>
+            <version>1.2.3.RELEASE</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -194,43 +216,19 @@
             <artifactId>epublib-tools</artifactId>
             <version>3.1</version>
         </dependency>
-        
-        <!-- Spring Framework -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>1.2.3.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <version>1.2.3.RELEASE</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j</artifactId>
-            <version>1.2.3.RELEASE</version>
-        </dependency>
-
     </dependencies>
     
     
-	<distributionManagement>
-		<repository>
-			<id>freme-nexus</id>
-			<name>Internal Releases</name>
-			<url>http://rv1443.1blu.de/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>freme-nexus</id>
-			<name>Internal Releases</name>
-			<url>http://rv1443.1blu.de/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>freme-nexus</id>
+            <name>Internal Releases</name>
+            <url>http://rv1443.1blu.de/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>freme-nexus</id>
+            <name>Internal Releases</name>
+            <url>http://rv1443.1blu.de/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
