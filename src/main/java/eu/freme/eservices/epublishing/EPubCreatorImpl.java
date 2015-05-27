@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import nl.siegmann.epublib.domain.Date;
 import nl.siegmann.epublib.domain.Identifier;
 import nl.siegmann.epublib.domain.TOCReference;
@@ -112,17 +113,17 @@ public class EPubCreatorImpl implements EPubCreator {
 
     private void addIllustrators(ArrayList<String> illustrators) {
         if (illustrators != null) {
-            illustrators.stream().forEach((illustrator) -> {
+            for (String illustrator : illustrators) {
                 metadata.addContributor(new Author(illustrator));
-            });
+            }
         }
     }
 
     private void addAuthors(ArrayList<String> authors) {
         if (authors != null) {
-            authors.stream().forEach((author) -> {
+            for (String author : authors) {
                 metadata.addAuthor(new Author(author));
-            });
+            }
         }
     }
 
@@ -156,7 +157,16 @@ public class EPubCreatorImpl implements EPubCreator {
 
         File[] listOfFiles = folder.listFiles();
 
-        Arrays.sort(listOfFiles, (File o1, File o2) -> o1.getName().compareTo(o2.getName()));
+        Arrays.sort(listOfFiles, new Comparator<File>() {
+
+            @Override
+            public int compare(File o1, File o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+        
+        
+        //Arrays.sort(listOfFiles, (File o1, File o2) -> o1.getName().compareTo(o2.getName()));
 
         for (File listOfFile : listOfFiles) {
             if (listOfFile.isFile() && (listOfFile.getName().endsWith(".html") || listOfFile.getName().endsWith(".xhtml"))) {
