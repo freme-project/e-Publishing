@@ -18,10 +18,7 @@ public class EPublishingService {
     
     private static final String tempFolderPath = System.getProperty("java.io.tmpdir");
 
-    public byte[] createEPUB(String jMetadata, InputStream in) throws IOException {
-        Gson gson = new Gson();
-        Metadata metadata = gson.fromJson(jMetadata, Metadata.class);
-
+    public byte[] createEPUB(Metadata metadata, InputStream in) throws IOException {
         // initialize the class that parses the input, and passes data to the EPUB creator
         ZipInputStream zin = new ZipInputStream(in, StandardCharsets.UTF_8);
         String unzippedPath = tempFolderPath + File.separator + "freme_epublishing_" + System.currentTimeMillis();

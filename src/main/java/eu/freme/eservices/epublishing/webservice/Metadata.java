@@ -130,4 +130,12 @@ public class Metadata {
     public void setCoverImage(String coverImage) {
         this.coverImage = coverImage;
     }
+    
+    public void addTitle(String title) {
+        titles.add(title);
+    }
+    
+    public void addAuthor(String author) {
+        authors.add(author);
+    }
 }

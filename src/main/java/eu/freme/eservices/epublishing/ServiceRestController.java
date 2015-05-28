@@ -1,5 +1,7 @@
 package eu.freme.eservices.epublishing;
 
+import com.google.gson.Gson;
+import eu.freme.eservices.epublishing.webservice.Metadata;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +24,8 @@ public class ServiceRestController {
 
     @RequestMapping(value = "/e-publishing/html", method = RequestMethod.POST)
     public ResponseEntity<byte[]> htmlToEPub(@RequestParam("htmlZip") MultipartFile file, @RequestParam("metadata") String jMetadata) throws IOException {
-        //return null;
-        return new ResponseEntity<>(entityAPI.createEPUB(jMetadata, file.getInputStream()), HttpStatus.OK);
+        Gson gson = new Gson();
+        Metadata metadata = gson.fromJson(jMetadata, Metadata.class);
+        return new ResponseEntity<>(entityAPI.createEPUB(metadata, file.getInputStream()), HttpStatus.OK);
     }
-
 }
