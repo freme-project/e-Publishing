@@ -32,7 +32,6 @@ import org.junit.Assert;
  */
 public class EPubTest extends ClientAndLocalServerBase {
 
-    @Test
     public void TestAlice() throws IOException {
         String title = "Alice in Utopia";
         String author = "Joske Vermeulen";
@@ -92,7 +91,6 @@ public class EPubTest extends ClientAndLocalServerBase {
         Assert.assertTrue(authors.containsAll(bookAuthorsNames));
     }
 
-    @Test
     public void TestSections() throws IOException {
         String title = "Alice in Utopia";
         String author = "Joske Vermeulen";
@@ -149,7 +147,6 @@ public class EPubTest extends ClientAndLocalServerBase {
         Assert.assertTrue("All EPUB authors are in the given authors.", authors.containsAll(bookAuthorsNames));
     }
 
-    @Test
     public void TestCoverImage() throws IOException {
         String title = "Alice in Utopia";
         String author = "Joske Vermeulen";
