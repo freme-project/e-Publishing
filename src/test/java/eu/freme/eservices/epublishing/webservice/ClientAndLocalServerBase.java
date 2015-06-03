@@ -26,13 +26,13 @@ public class ClientAndLocalServerBase {
     protected Client client;
     protected WebTarget target;
     //protected Main main;
+    protected Run webService;
 
     @Before
     public void setUp() throws Exception {
 		// server
-        //TODO
-        //main = new Main();
-        //main.createGrizzlyServer(baseURL);
+        webService = new Run();
+        webService.run();
 
         // client
         client = ClientBuilder.newClient();
@@ -46,7 +46,6 @@ public class ClientAndLocalServerBase {
         client.close();
 
 	// server
-        //TODO
-        //main.close();
+        webService.close();
     }
 }

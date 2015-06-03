@@ -1,25 +1,21 @@
 package eu.freme.eservices.epublishing.webservice;
 
 import com.google.gson.Gson;
-import org.apache.commons.io.IOUtils;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
-import org.junit.Test;
-
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import nl.siegmann.epublib.domain.Author;
 import nl.siegmann.epublib.domain.Book;
 import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.epub.EpubReader;
+import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.junit.Assert;
+import org.junit.Test;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Response;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -32,6 +28,7 @@ import org.junit.Assert;
  */
 public class EPubTest extends ClientAndLocalServerBase {
 
+    @Test
     public void TestAlice() throws IOException {
         String title = "Alice in Utopia";
         String author = "Joske Vermeulen";
@@ -65,7 +62,7 @@ public class EPubTest extends ClientAndLocalServerBase {
         System.out.println(gson.toJson(metadata));
 
         // now send it to the service
-        Response response = target.path("epublish/html").request().post(Entity.entity(multiPart, multiPart.getMediaType()));
+        Response response = target.path("e-publishing/html").request("application/epub+zip").post(Entity.entity(multiPart, multiPart.getMediaType()));
         InputStream in = response.readEntity(InputStream.class);
 
         // write it to a (temporary) file
@@ -78,7 +75,7 @@ public class EPubTest extends ClientAndLocalServerBase {
         Book b = r.readEpub(new FileInputStream(ePubFile));
         List<String> bookTitles = b.getMetadata().getTitles();
         List<Author> bookAuthors = b.getMetadata().getAuthors();
-        List<String> bookAuthorsNames = new ArrayList<String>();
+        List<String> bookAuthorsNames = new ArrayList<>();
 
         for (Author a : bookAuthors) {
             bookAuthorsNames.add(a.getFirstname() + " " + a.getLastname());
@@ -91,6 +88,7 @@ public class EPubTest extends ClientAndLocalServerBase {
         Assert.assertTrue(authors.containsAll(bookAuthorsNames));
     }
 
+    @Test
     public void TestSections() throws IOException {
         String title = "Alice in Utopia";
         String author = "Joske Vermeulen";
@@ -121,7 +119,7 @@ public class EPubTest extends ClientAndLocalServerBase {
         multiPart.field("metadata", gson.toJson(metadata));
 
         // now send it to the service
-        Response response = target.path("epublish/html").request().post(Entity.entity(multiPart, multiPart.getMediaType()));
+        Response response = target.path("e-publishing/html").request("application/epub+zip").post(Entity.entity(multiPart, multiPart.getMediaType()));
         InputStream in = response.readEntity(InputStream.class);
 
         // write it to a (temporary) file
@@ -134,7 +132,7 @@ public class EPubTest extends ClientAndLocalServerBase {
         Book b = r.readEpub(new FileInputStream(ePubFile));
         List<String> bookTitles = b.getMetadata().getTitles();
         List<Author> bookAuthors = b.getMetadata().getAuthors();
-        List<String> bookAuthorsNames = new ArrayList<String>();
+        List<String> bookAuthorsNames = new ArrayList<>();
 
         for (Author a : bookAuthors) {
             bookAuthorsNames.add(a.getFirstname() + " " + a.getLastname());
@@ -147,6 +145,7 @@ public class EPubTest extends ClientAndLocalServerBase {
         Assert.assertTrue("All EPUB authors are in the given authors.", authors.containsAll(bookAuthorsNames));
     }
 
+    @Test
     public void TestCoverImage() throws IOException {
         String title = "Alice in Utopia";
         String author = "Joske Vermeulen";
@@ -179,7 +178,7 @@ public class EPubTest extends ClientAndLocalServerBase {
         multiPart.field("metadata", gson.toJson(metadata));
 
         // now send it to the service
-        Response response = target.path("epublish/html").request().post(Entity.entity(multiPart, multiPart.getMediaType()));
+        Response response = target.path("e-publishing/html").request("application/epub+zip").post(Entity.entity(multiPart, multiPart.getMediaType()));
         InputStream in = response.readEntity(InputStream.class);
 
         // write it to a (temporary) file
