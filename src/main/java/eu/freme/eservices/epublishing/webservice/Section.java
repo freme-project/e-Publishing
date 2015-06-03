@@ -1,6 +1,6 @@
 package eu.freme.eservices.epublishing.webservice;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class Section {
     
-    private ArrayList<Section> subsections;
+    private List<Section> subsections;
     private String title, resource;
     
     public Section() {}
@@ -22,11 +22,11 @@ public class Section {
         subsections.add(section);
     }
 
-    public ArrayList<Section> getSubsections() {
+    public List<Section> getSubsections() {
         return subsections;
     }
 
-    public void setSubsections(ArrayList<Section> subsections) {
+    public void setSubsections(List<Section> subsections) {
         this.subsections = subsections;
     }
 
@@ -46,7 +46,7 @@ public class Section {
         this.resource = resource;
     } 
     
-    public static boolean hasSectionWithResource(ArrayList<Section> sections, String resource) {
+    public static boolean hasSectionWithResource(List<Section> sections, String resource) {
         if (sections == null) {
             return false;
         }

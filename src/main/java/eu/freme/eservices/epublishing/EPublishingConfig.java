@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public class EPublishingConfig {
 
     @Bean
+    @SuppressWarnings("unused")
     public EPublishingService getEntityAPI() {
         return new EPublishingService();
     }

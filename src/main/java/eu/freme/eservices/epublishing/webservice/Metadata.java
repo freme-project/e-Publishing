@@ -2,6 +2,7 @@ package eu.freme.eservices.epublishing.webservice;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  *
@@ -9,53 +10,53 @@ import java.util.Calendar;
  */
 public class Metadata {
     
-    private ArrayList<String> titles, authors, illustrators, creators, subjects;
+    private List<String> titles, authors, illustrators, creators, subjects;
     private String language, source, type, description, rights, coverImage;
     private Calendar publicationDate;
-    private ArrayList<Section> tableOfContents;
+    private List<Section> tableOfContents;
     private Identifier identifier;
     
     public Metadata() {
         
     }
 
-    public ArrayList<String> getTitles() {
+    public List<String> getTitles() {
         return titles;
     }
 
-    public void setTitles(ArrayList<String> titles) {
+    public void setTitles(List<String> titles) {
         this.titles = titles;
     }
 
-    public ArrayList<String> getAuthors() {
+    public List<String> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(ArrayList<String> authors) {
+    public void setAuthors(List<String> authors) {
         this.authors = authors;
     }
 
-    public ArrayList<String> getIllustrators() {
+    public List<String> getIllustrators() {
         return illustrators;
     }
 
-    public void setIllustrators(ArrayList<String> illustrators) {
+    public void setIllustrators(List<String> illustrators) {
         this.illustrators = illustrators;
     }
 
-    public ArrayList<String> getCreators() {
+    public List<String> getCreators() {
         return creators;
     }
 
-    public void setCreators(ArrayList<String> creators) {
+    public void setCreators(List<String> creators) {
         this.creators = creators;
     }
 
-    public ArrayList<String> getSubjects() {
+    public List<String> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(ArrayList<String> subjects) {
+    public void setSubjects(List<String> subjects) {
         this.subjects = subjects;
     }
 
@@ -115,11 +116,11 @@ public class Metadata {
         this.rights = rights;
     }
 
-    public ArrayList<Section> getTableOfContents() {
+    public List<Section> getTableOfContents() {
         return tableOfContents;
     }
 
-    public void setTableOfContents(ArrayList<Section> tableOfContents) {
+    public void setTableOfContents(List<Section> tableOfContents) {
         this.tableOfContents = tableOfContents;
     }
 
@@ -132,10 +133,16 @@ public class Metadata {
     }
     
     public void addTitle(String title) {
+        if (titles == null) {
+            titles = new ArrayList<>();
+        }
         titles.add(title);
     }
     
     public void addAuthor(String author) {
+        if (authors == null) {
+            authors = new ArrayList<>();
+        }
         authors.add(author);
     }
 }

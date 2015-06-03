@@ -1,25 +1,17 @@
 package eu.freme.eservices.epublishing;
 
 import eu.freme.eservices.epublishing.webservice.Section;
-import java.io.File;
-import java.io.FileInputStream;
 import nl.siegmann.epublib.bookprocessor.HtmlCleanerBookProcessor;
-import nl.siegmann.epublib.domain.Author;
-import nl.siegmann.epublib.domain.Book;
-import nl.siegmann.epublib.domain.Metadata;
-import nl.siegmann.epublib.domain.Resource;
+import nl.siegmann.epublib.domain.*;
 import nl.siegmann.epublib.epub.BookProcessor;
 import nl.siegmann.epublib.epub.BookProcessorPipeline;
 import nl.siegmann.epublib.epub.EpubWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringReader;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import nl.siegmann.epublib.domain.Date;
-import nl.siegmann.epublib.domain.Identifier;
-import nl.siegmann.epublib.domain.TOCReference;
+import java.util.List;
 
 /**
  * <p>
@@ -89,7 +81,7 @@ public class EPubCreatorImpl implements EPubCreator {
         }
 
         if (ourMetadata.getRights() != null) {
-            ArrayList<String> rights = new ArrayList<>();
+            List<String> rights = new ArrayList<>();
             rights.add(ourMetadata.getRights());
             this.metadata.setRights(rights);
         }
@@ -111,7 +103,7 @@ public class EPubCreatorImpl implements EPubCreator {
         book.setCoverImage(new Resource(new FileInputStream(unzippedPath + File.separator + coverImage), coverImage));
     }
 
-    private void addIllustrators(ArrayList<String> illustrators) {
+    private void addIllustrators(List<String> illustrators) {
         if (illustrators != null) {
             for (String illustrator : illustrators) {
                 metadata.addContributor(new Author(illustrator));
@@ -119,7 +111,7 @@ public class EPubCreatorImpl implements EPubCreator {
         }
     }
 
-    private void addAuthors(ArrayList<String> authors) {
+    private void addAuthors(List<String> authors) {
         if (authors != null) {
             for (String author : authors) {
                 metadata.addAuthor(new Author(author));
@@ -127,7 +119,7 @@ public class EPubCreatorImpl implements EPubCreator {
         }
     }
 
-    private void createSections(ArrayList<Section> toc, TOCReference parentSection) throws IOException {
+    private void createSections(List<Section> toc, TOCReference parentSection) throws IOException {
         for (Section section : toc) {
             Resource resource = new Resource(new FileInputStream(unzippedPath + File.separator + section.getResource()), section.getResource());
 
@@ -145,8 +137,8 @@ public class EPubCreatorImpl implements EPubCreator {
         }
     }
 
-    private ArrayList<Section> createBestEffortTableOfContents(String parent) throws IOException {
-        ArrayList<Section> sections = new ArrayList<>();
+    private List<Section> createBestEffortTableOfContents(String parent) throws IOException {
+        List<Section> sections = new ArrayList<>();
         File folder;
 
         if (parent == null || parent.equals("")) {
@@ -157,32 +149,34 @@ public class EPubCreatorImpl implements EPubCreator {
 
         File[] listOfFiles = folder.listFiles();
 
-        Arrays.sort(listOfFiles, new Comparator<File>() {
+        if (listOfFiles != null) {
+            Arrays.sort(listOfFiles, new Comparator<File>() {
 
-            @Override
-            public int compare(File o1, File o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
-        
-        
-        //Arrays.sort(listOfFiles, (File o1, File o2) -> o1.getName().compareTo(o2.getName()));
-
-        for (File listOfFile : listOfFiles) {
-            if (listOfFile.isFile() && (listOfFile.getName().endsWith(".html") || listOfFile.getName().endsWith(".xhtml"))) {
-                Section s;
-                if (parent == null || parent.equals("")) {
-                    s = new Section(listOfFile.getName().substring(0, listOfFile.getName().lastIndexOf(".")), listOfFile.getName());
-                } else {
-                    s = new Section(listOfFile.getName().substring(0, listOfFile.getName().lastIndexOf(".")), parent + File.separator + listOfFile.getName());
+                @Override
+                public int compare(File o1, File o2) {
+                    return o1.getName().compareTo(o2.getName());
                 }
-                
-                sections.add(s);
-            } else if (listOfFile.isDirectory()) {
-                if (parent == null || parent.equals("")) {
-                    sections.addAll(createBestEffortTableOfContents(listOfFile.getName()));
-                } else {
-                    sections.addAll(createBestEffortTableOfContents(parent + File.separator + listOfFile.getName()));
+            });
+
+
+            //Arrays.sort(listOfFiles, (File o1, File o2) -> o1.getName().compareTo(o2.getName()));
+
+            for (File listOfFile : listOfFiles) {
+                if (listOfFile.isFile() && (listOfFile.getName().endsWith(".html") || listOfFile.getName().endsWith(".xhtml"))) {
+                    Section s;
+                    if (parent == null || parent.equals("")) {
+                        s = new Section(listOfFile.getName().substring(0, listOfFile.getName().lastIndexOf(".")), listOfFile.getName());
+                    } else {
+                        s = new Section(listOfFile.getName().substring(0, listOfFile.getName().lastIndexOf(".")), parent + File.separator + listOfFile.getName());
+                    }
+
+                    sections.add(s);
+                } else if (listOfFile.isDirectory()) {
+                    if (parent == null || parent.equals("")) {
+                        sections.addAll(createBestEffortTableOfContents(listOfFile.getName()));
+                    } else {
+                        sections.addAll(createBestEffortTableOfContents(parent + File.separator + listOfFile.getName()));
+                    }
                 }
             }
         }
@@ -201,18 +195,20 @@ public class EPubCreatorImpl implements EPubCreator {
 
         File[] listOfFiles = folder.listFiles();
 
-        for (File listOfFile : listOfFiles) {
-            if (listOfFile.isFile() && !isFileAlreadyAdded(listOfFile)) {
-                if (parent == null || parent.equals("")) {
-                    book.addResource(new Resource(new FileInputStream(listOfFile), listOfFile.getName()));
-                } else {
-                    book.addResource(new Resource(new FileInputStream(listOfFile), parent + File.separator + listOfFile.getName()));
-                }
-            } else if (listOfFile.isDirectory()) {
-                if (parent == null || parent.equals("")) {
-                    copyUnaddedFilesFromZipToEpub(listOfFile.getName());
-                } else {
-                    copyUnaddedFilesFromZipToEpub(parent + File.separator + listOfFile.getName());
+        if (listOfFiles != null) {
+            for (File listOfFile : listOfFiles) {
+                if (listOfFile.isFile() && !isFileAlreadyAdded(listOfFile)) {
+                    if (parent == null || parent.equals("")) {
+                        book.addResource(new Resource(new FileInputStream(listOfFile), listOfFile.getName()));
+                    } else {
+                        book.addResource(new Resource(new FileInputStream(listOfFile), parent + File.separator + listOfFile.getName()));
+                    }
+                } else if (listOfFile.isDirectory()) {
+                    if (parent == null || parent.equals("")) {
+                        copyUnaddedFilesFromZipToEpub(listOfFile.getName());
+                    } else {
+                        copyUnaddedFilesFromZipToEpub(parent + File.separator + listOfFile.getName());
+                    }
                 }
             }
         }
