@@ -20,9 +20,10 @@ public class EPublishingService {
 
     public byte[] createEPUB(Metadata metadata, InputStream in) throws IOException {
         // initialize the class that parses the input, and passes data to the EPUB creator
-        ZipInputStream zin = new ZipInputStream(in, StandardCharsets.UTF_8);
         String unzippedPath = tempFolderPath + File.separator + "freme_epublishing_" + System.currentTimeMillis();
-        Unzipper.unzip(zin, unzippedPath);
+        try (ZipInputStream zin = new ZipInputStream(in, StandardCharsets.UTF_8)) {
+            Unzipper.unzip(zin,unzippedPath);
+        }
 
         // initialize class that will create the EPUB file
         EPubCreator creator = new EPubCreatorImpl(metadata, unzippedPath);

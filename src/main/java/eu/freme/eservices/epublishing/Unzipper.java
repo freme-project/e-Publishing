@@ -1,9 +1,10 @@
 package eu.freme.eservices.epublishing;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -13,51 +14,35 @@ import java.util.zip.ZipInputStream;
  */
 public class Unzipper {
 
-    List<String> fileList;
+    public static void unzip(ZipInputStream zis, String outputFolder) throws IOException {
+        //create output directory is not exists
+        File folder = new File(outputFolder);
 
-    public static void unzip(ZipInputStream zis, String outputFolder) {
-        byte[] buffer = new byte[1024];
-
-        try {
-
-            //create output directory is not exists
-            File folder = new File(outputFolder);
-
-            if (!folder.exists()) {
-                folder.mkdir();
-            }
-
-            //get the zipped file list entry
-            ZipEntry ze = zis.getNextEntry();
-
-            while (ze != null) {
-                String fileName = ze.getName();
-                File newFile = new File(outputFolder + File.separator + fileName);
-
-                //System.out.println("file unzip : " + newFile.getAbsoluteFile());
-
-                //create all non exists folders
-                //else you will hit FileNotFoundException for compressed folder
-                new File(newFile.getParent()).mkdirs();
-
-                FileOutputStream fos = new FileOutputStream(newFile);
-
-                int len;
-                while ((len = zis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, len);
-                }
-
-                fos.close();
-                ze = zis.getNextEntry();
-            }
-
-            zis.closeEntry();
-            zis.close();
-
-            //System.out.println("Done");
-
-        } catch (IOException ex) {
-            System.out.println(ex);
+        if (!folder.exists() && !folder.mkdirs()) {
+            throw new IOException("Cannot create directory " + folder);
         }
+
+        //get the zipped file list entry
+        ZipEntry ze = zis.getNextEntry();
+
+        while (ze != null) {
+            String fileName = ze.getName();
+            File newFile = new File(outputFolder, fileName);
+
+            //System.out.println("file unzip : " + newFile.getAbsoluteFile());
+
+            //create all non exists folders
+            //else you will hit FileNotFoundException for compressed folder
+            File parentDir = newFile.getParentFile();
+            if (!parentDir.exists() && !parentDir.mkdirs()) {
+                throw new IOException("Cannot create directory " + newFile.getParent());
+            }
+
+            try (FileOutputStream fos = new FileOutputStream(newFile)) {
+                IOUtils.copyLarge(zis, fos);
+            }
+            ze = zis.getNextEntry();
+        }
+        zis.closeEntry();
     }
 }
