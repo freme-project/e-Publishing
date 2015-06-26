@@ -190,7 +190,7 @@ public class EPubCreatorImpl implements EPubCreator {
         if (parent == null || parent.equals("")) {
             folder = new File(unzippedPath);
         } else {
-            folder = new File(unzippedPath + File.pathSeparator + parent);
+            folder = new File(unzippedPath + File.separator + parent);
         }
 
         File[] listOfFiles = folder.listFiles();

@@ -1,6 +1,8 @@
 package eu.freme.eservices.epublishing;
 
 import com.google.gson.Gson;
+import eu.freme.eservices.epublishing.exception.EPubCreationException;
+import eu.freme.eservices.epublishing.exception.InvalidZipException;
 import eu.freme.eservices.epublishing.webservice.Metadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import javax.servlet.annotation.MultipartConfig;
 
 /**
  *
@@ -27,7 +30,7 @@ public class ServiceRestController {
     EPublishingService entityAPI;
 
     @RequestMapping(value = "/e-publishing/html", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> htmlToEPub(@RequestParam("htmlZip") MultipartFile file, @RequestParam("metadata") String jMetadata) throws IOException {
+    public ResponseEntity<byte[]> htmlToEPub(@RequestParam("htmlZip") MultipartFile file, @RequestParam("metadata") String jMetadata) throws IOException, InvalidZipException, EPubCreationException {
         Gson gson = new Gson();
         Metadata metadata = gson.fromJson(jMetadata, Metadata.class);
         MultiValueMap<String, String> headers = new HttpHeaders();

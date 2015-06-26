@@ -1,8 +1,12 @@
 package eu.freme.eservices.epublishing.webservice;
 
+import com.google.gson.Gson;
+import eu.freme.eservices.epublishing.exception.EPubCreationException;
+import eu.freme.eservices.epublishing.exception.InvalidZipException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +36,55 @@ public class EPUBCreationTest extends TestBase {
     }
     
     @Test
-    public void testTitles() throws IOException {
+    public void testWithoutTitle() throws FileNotFoundException, InvalidZipException, EPubCreationException, IOException {
+        Metadata metadata = getSimpleMetadataForZip();
+        metadata.setTitles(new ArrayList<String>());
+        
+        byte[] epub = getePublishingService().createEPUB(metadata, new FileInputStream(getZipFile()));
+
+        // write it to a (temporary) file
+        File ePubFile = File.createTempFile("alice", ".epub");
+        System.out.println("Writing result to " + ePubFile);
+        IOUtils.copy(new ByteArrayInputStream(epub), new FileOutputStream(ePubFile));
+
+        //read file and perform checks
+        EpubReader r = new EpubReader();
+        Book b = r.readEpub(new FileInputStream(ePubFile));
+        List<String> bookTitles = b.getMetadata().getTitles();
+
+        Assert.assertTrue("All titles are in the EPUB.", bookTitles.containsAll(metadata.getTitles()));
+        Assert.assertTrue("All EPUB titles are in the given titles.", metadata.getTitles().containsAll(bookTitles));  
+    }
+    
+    @Test
+    public void testWithoutAuthor() throws FileNotFoundException, InvalidZipException, EPubCreationException, IOException {
+        Metadata metadata = getSimpleMetadataForZip();
+        metadata.setAuthors(new ArrayList<String>());
+        
+        byte[] epub = getePublishingService().createEPUB(metadata, new FileInputStream(getZipFile()));
+
+        // write it to a (temporary) file
+        File ePubFile = File.createTempFile("alice", ".epub");
+        System.out.println("Writing result to " + ePubFile);
+        IOUtils.copy(new ByteArrayInputStream(epub), new FileOutputStream(ePubFile));
+
+        //read file and perform checks
+        EpubReader r = new EpubReader();
+        Book b = r.readEpub(new FileInputStream(ePubFile));
+        List<Author> bookAuthors = b.getMetadata().getAuthors();
+        List<String> bookAuthorsNames = new ArrayList<>();
+
+        for (Author a : bookAuthors) {
+            bookAuthorsNames.add(a.getFirstname() + " " + a.getLastname());
+        }
+
+        System.out.println(bookAuthorsNames);
+        Assert.assertTrue("All authors are in the EPUB.", bookAuthorsNames.containsAll(metadata.getAuthors()));
+        Assert.assertTrue("All EPUB authors are in the given authors.", metadata.getAuthors().containsAll(bookAuthorsNames));
+    }
+    
+    @Test
+    public void testTitles() throws IOException, InvalidZipException, EPubCreationException {
         String anotherTitle = "Alice in Europe";
         
         Metadata metadata = getSimpleMetadataForZip();
@@ -55,7 +107,7 @@ public class EPUBCreationTest extends TestBase {
     }
     
     @Test
-    public void testAuthors() throws IOException {
+    public void testAuthors() throws IOException, InvalidZipException, EPubCreationException {
         String anotherAuthor = "Nick Borth";
 
         Metadata metadata = getSimpleMetadataForZip();
@@ -84,7 +136,7 @@ public class EPUBCreationTest extends TestBase {
     }
     
     @Test
-    public void testCoverImage() throws IOException {
+    public void testCoverImage() throws IOException, InvalidZipException, EPubCreationException {
         byte[] epub = getePublishingService().createEPUB(getSimpleMetadataForZip(), new FileInputStream(getZipFile()));
 
         // write it to a (temporary) file

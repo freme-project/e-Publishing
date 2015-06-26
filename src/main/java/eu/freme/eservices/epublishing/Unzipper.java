@@ -29,7 +29,7 @@ public class Unzipper {
             String fileName = ze.getName();
             File newFile = new File(outputFolder, fileName);
 
-            //System.out.println("file unzip : " + newFile.getAbsoluteFile());
+            System.out.println("file unzip : " + newFile.getAbsoluteFile());
 
             //create all non exists folders
             //else you will hit FileNotFoundException for compressed folder
@@ -38,8 +38,12 @@ public class Unzipper {
                 throw new IOException("Cannot create directory " + newFile.getParent());
             }
 
-            try (FileOutputStream fos = new FileOutputStream(newFile)) {
-                IOUtils.copyLarge(zis, fos);
+            if (ze.isDirectory()) {
+                newFile.mkdirs();
+            } else {
+                try (FileOutputStream fos = new FileOutputStream(newFile)) {
+                    IOUtils.copyLarge(zis, fos);
+                }
             }
             ze = zis.getNextEntry();
         }
