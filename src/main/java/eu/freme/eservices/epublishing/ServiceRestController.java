@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import javax.servlet.annotation.MultipartConfig;
 
 /**
  *
@@ -27,7 +26,7 @@ import javax.servlet.annotation.MultipartConfig;
 public class ServiceRestController {
 
     @Autowired
-    EPublishingService entityAPI;
+    EPublishingService epubAPI;
 
     @RequestMapping(value = "/e-publishing/html", method = RequestMethod.POST)
     public ResponseEntity<byte[]> htmlToEPub(@RequestParam("htmlZip") MultipartFile file, @RequestParam("metadata") String jMetadata) throws IOException, InvalidZipException, EPubCreationException {
@@ -35,6 +34,6 @@ public class ServiceRestController {
         Metadata metadata = gson.fromJson(jMetadata, Metadata.class);
         MultiValueMap<String, String> headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "Application/epub+zip");
-        return new ResponseEntity<>(entityAPI.createEPUB(metadata, file.getInputStream()), headers, HttpStatus.OK);
+        return new ResponseEntity<>(epubAPI.createEPUB(metadata, file.getInputStream()), headers, HttpStatus.OK);
     }
 }
