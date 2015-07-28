@@ -10,11 +10,12 @@ import java.util.List;
  */
 public class Metadata {
     
-    private List<String> titles, authors, illustrators, creators, subjects;
+    private List<String> titles, subjects;
     private String language, source, type, description, rights, coverImage, epubVersion;
     private Calendar publicationDate;
     private List<Section> tableOfContents;
     private Identifier identifier;
+    private List<Person> creators, contributors;
     
     public Metadata() {
         
@@ -27,28 +28,11 @@ public class Metadata {
     public void setTitles(List<String> titles) {
         this.titles = titles;
     }
-
-    public List<String> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(List<String> authors) {
-        this.authors = authors;
-    }
-
-    public List<String> getIllustrators() {
-        return illustrators;
-    }
-
-    public void setIllustrators(List<String> illustrators) {
-        this.illustrators = illustrators;
-    }
-
-    public List<String> getCreators() {
+    public List<Person> getCreators() {
         return creators;
     }
 
-    public void setCreators(List<String> creators) {
+    public void setCreators(List<Person> creators) {
         this.creators = creators;
     }
 
@@ -138,13 +122,6 @@ public class Metadata {
         }
         titles.add(title);
     }
-    
-    public void addAuthor(String author) {
-        if (authors == null) {
-            authors = new ArrayList<>();
-        }
-        authors.add(author);
-    }
 
     public String getEPUBVersion() {
         return epubVersion;
@@ -152,5 +129,45 @@ public class Metadata {
 
     public void setEPUBVersion(String epubVersion) {
         this.epubVersion = epubVersion;
+    }
+
+    public List<Person> getContributors() {
+        return contributors;
+    }
+
+    public void setContributors(List<Person> contributors) {
+        this.contributors = contributors;
+    }
+    
+    public List<Person> getAuthors() {
+        ArrayList<Person> authors = new ArrayList<>();
+        authors.addAll(getCreators("author"));
+        authors.addAll(getContributors("author"));
+        
+        return authors;
+    }
+    
+    public List<Person> getCreators(String role) {
+        ArrayList<Person> people = new ArrayList<>();
+        
+        for (Person c : creators) {
+            if (c.hasRole(role)) {
+                people.add(c);
+            }
+        }
+        
+        return people;
+    }
+    
+    public List<Person> getContributors(String role) {
+        ArrayList<Person> people = new ArrayList<>();
+        
+        for (Person c : contributors) {
+            if (c.hasRole(role)) {
+                people.add(c);
+            }
+        }
+        
+        return people;
     }
 }

@@ -1,5 +1,6 @@
 package eu.freme.eservices.epublishing;
 
+import eu.freme.eservices.epublishing.webservice.Person;
 import eu.freme.eservices.epublishing.webservice.Section;
 import nl.siegmann.epublib.domain.*;
 import nl.siegmann.epublib.epub.BookProcessor;
@@ -43,8 +44,8 @@ public class EPubCreatorImpl implements EPubCreator {
         this.unzippedPath = unzippedPath;
         this.ourMetadata = ourMetadata;
 
-        addAuthors(ourMetadata.getAuthors());
-        addIllustrators(ourMetadata.getIllustrators());
+        addCreators(ourMetadata.getCreators());
+        addContributors(ourMetadata.getContributors());
 
         if (ourMetadata.getLanguage() != null) {
             this.metadata.setLanguage(ourMetadata.getLanguage());
@@ -117,18 +118,18 @@ public class EPubCreatorImpl implements EPubCreator {
         book.setCoverImage(new Resource(new FileInputStream(unzippedPath + File.separator + coverImage), coverImage));
     }
 
-    private void addIllustrators(List<String> illustrators) {
-        if (illustrators != null) {
-            for (String illustrator : illustrators) {
-                metadata.addContributor(new Author(illustrator));
+    private void addCreators(List<Person> creators) {
+        if (creators != null) {
+            for (Person creator : creators) {
+                metadata.addCreator(new CreatorContributor(creator.getFirstName(), creator.getLastName(), creator.getRoles()));
             }
         }
     }
-
-    private void addAuthors(List<String> authors) {
-        if (authors != null) {
-            for (String author : authors) {
-                metadata.addAuthor(new Author(author));
+    
+     private void addContributors(List<Person> contributors) {
+        if (contributors != null) {
+            for (Person contributor : contributors) {
+                metadata.addContributor(new CreatorContributor(contributor.getFirstName(), contributor.getLastName(), contributor.getRoles()));
             }
         }
     }
