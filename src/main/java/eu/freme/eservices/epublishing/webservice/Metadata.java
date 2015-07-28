@@ -11,7 +11,7 @@ import java.util.List;
 public class Metadata {
     
     private List<String> titles, authors, illustrators, creators, subjects;
-    private String language, source, type, description, rights, coverImage;
+    private String language, source, type, description, rights, coverImage, epubVersion;
     private Calendar publicationDate;
     private List<Section> tableOfContents;
     private Identifier identifier;
@@ -144,5 +144,13 @@ public class Metadata {
             authors = new ArrayList<>();
         }
         authors.add(author);
+    }
+
+    public String getEPUBVersion() {
+        return epubVersion;
+    }
+
+    public void setEPUBVersion(String epubVersion) {
+        this.epubVersion = epubVersion;
     }
 }

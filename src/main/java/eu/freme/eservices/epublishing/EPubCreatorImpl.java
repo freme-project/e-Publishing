@@ -1,17 +1,20 @@
 package eu.freme.eservices.epublishing;
 
 import eu.freme.eservices.epublishing.webservice.Section;
-import nl.siegmann.epublib.bookprocessor.HtmlCleanerBookProcessor;
 import nl.siegmann.epublib.domain.*;
 import nl.siegmann.epublib.epub.BookProcessor;
 import nl.siegmann.epublib.epub.BookProcessorPipeline;
-import nl.siegmann.epublib.epub.EpubWriter;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import nl.siegmann.epublib.bookprocessor.Epub2HtmlCleanerBookProcessor;
+import nl.siegmann.epublib.bookprocessor.Epub3HtmlCleanerBookProcessor;
+import nl.siegmann.epublib.epub.Epub2Writer;
+import nl.siegmann.epublib.epub.Epub3Writer;
+import nl.siegmann.epublib.epub.EpubWriter;
 
 /**
  * <p>
@@ -32,6 +35,7 @@ public class EPubCreatorImpl implements EPubCreator {
     private final Metadata metadata;
     private final eu.freme.eservices.epublishing.webservice.Metadata ourMetadata;
     private final String unzippedPath;
+    private final EpubWriter epubWriter;
 
     public EPubCreatorImpl(final eu.freme.eservices.epublishing.webservice.Metadata ourMetadata, final String unzippedPath) throws IOException {
         book = new Book();
@@ -42,7 +46,7 @@ public class EPubCreatorImpl implements EPubCreator {
         addAuthors(ourMetadata.getAuthors());
         addIllustrators(ourMetadata.getIllustrators());
 
-        if (metadata.getLanguage() != null) {
+        if (ourMetadata.getLanguage() != null) {
             this.metadata.setLanguage(ourMetadata.getLanguage());
         }
 
@@ -97,6 +101,16 @@ public class EPubCreatorImpl implements EPubCreator {
         }
 
         copyUnaddedFilesFromZipToEpub(null);
+        
+        if (ourMetadata.getEPUBVersion() != null && ourMetadata.getEPUBVersion().equals("2")) {
+            BookProcessor[] bookProcessors = {new Epub2HtmlCleanerBookProcessor()};
+            BookProcessor bookProcessorPipeline = new BookProcessorPipeline(Arrays.asList(bookProcessors));
+            epubWriter = new Epub2Writer(bookProcessorPipeline);
+        } else {
+            BookProcessor[] bookProcessors = {new Epub3HtmlCleanerBookProcessor()};
+            BookProcessor bookProcessorPipeline = new BookProcessorPipeline(Arrays.asList(bookProcessors));
+            epubWriter = new Epub3Writer(bookProcessorPipeline);
+        }
     }
 
     private void addCoverImage(String coverImage) throws IOException {
@@ -240,10 +254,7 @@ public class EPubCreatorImpl implements EPubCreator {
     @Override
     public void onEnd(OutputStream out) throws IOException {
         book.setMetadata(metadata);
-        BookProcessor[] bookProcessors = {new HtmlCleanerBookProcessor() /*, AnotherBookProcessor, ... */};
-        BookProcessor bookProcessorPipeline = new BookProcessorPipeline(Arrays.asList(bookProcessors));
-        EpubWriter writer = new EpubWriter(bookProcessorPipeline);
-        writer.write(book, out);
+        epubWriter.write(book, out);
     }
 
     private String getBaseName(final String name) {
