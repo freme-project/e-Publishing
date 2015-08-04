@@ -10,8 +10,8 @@ import java.util.List;
  */
 public class Metadata {
     
-    private List<String> titles, subjects;
-    private String language, source, type, description, rights, coverImage, epubVersion;
+    private List<String> titles, subjects, sources, relations, types, descriptions;
+    private String language, rights, coverImage, epubVersion;
     private Calendar publicationDate;
     private List<Section> tableOfContents;
     private Identifier identifier;
@@ -68,28 +68,28 @@ public class Metadata {
         this.publicationDate = publicationDate;
     }
 
-    public String getSource() {
-        return source;
+    public List<String> getSources() {
+        return sources;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    public void setSources(List<String> sources) {
+        this.sources = sources;
     }
 
-    public String getType() {
-        return type;
+    public List<String> getTypes() {
+        return types;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypes(List<String> types) {
+        this.types = types;
     }
 
-    public String getDescription() {
-        return description;
+    public List<String> getDescriptions() {
+        return descriptions;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptions(List<String> descriptions) {
+        this.descriptions = descriptions;
     }
 
     public String getRights() {
@@ -120,6 +120,7 @@ public class Metadata {
         if (titles == null) {
             titles = new ArrayList<>();
         }
+        
         titles.add(title);
     }
 
@@ -169,5 +170,13 @@ public class Metadata {
         }
         
         return people;
+    }
+
+    public List<String> getRelations() {
+        return relations;
+    }
+
+    public void setRelations(List<String> relations) {
+        this.relations = relations;
     }
 }

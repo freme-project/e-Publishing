@@ -1,5 +1,6 @@
 package eu.freme.eservices.epublishing;
 
+import eu.freme.eservices.epublishing.exception.MissingMetadataException;
 import eu.freme.eservices.epublishing.webservice.Person;
 import eu.freme.eservices.epublishing.webservice.Section;
 import nl.siegmann.epublib.domain.*;
@@ -38,7 +39,7 @@ public class EPubCreatorImpl implements EPubCreator {
     private final String unzippedPath;
     private final EpubWriter epubWriter;
 
-    public EPubCreatorImpl(final eu.freme.eservices.epublishing.webservice.Metadata ourMetadata, final String unzippedPath) throws IOException {
+    public EPubCreatorImpl(final eu.freme.eservices.epublishing.webservice.Metadata ourMetadata, final String unzippedPath) throws IOException, MissingMetadataException {
         book = new Book();
         this.metadata = new Metadata();
         this.unzippedPath = unzippedPath;
@@ -59,10 +60,14 @@ public class EPubCreatorImpl implements EPubCreator {
             }
             
             this.metadata.addIdentifier(new Identifier(scheme, ourMetadata.getIdentifier().getValue()));
+        } else {
+            throw new MissingMetadataException("Identifier is missing.");
         }
 
-        if (ourMetadata.getTitles() != null) {
+        if (ourMetadata.getTitles() != null && !ourMetadata.getTitles().isEmpty()) {
             this.metadata.setTitles(ourMetadata.getTitles());
+        } else {
+            throw new MissingMetadataException("At least one title is required.");
         }
 
         if (ourMetadata.getSubjects() != null) {
@@ -74,15 +79,20 @@ public class EPubCreatorImpl implements EPubCreator {
         }
 
         //TODO
-        if (ourMetadata.getSource() != null) {
+        if (ourMetadata.getSources() != null) {
+            this.metadata.setSources(ourMetadata.getSources());
         }
 
-        if (ourMetadata.getType() != null) {
-            this.metadata.addType(ourMetadata.getType());
+        if (ourMetadata.getTypes() != null) {
+            this.metadata.setTypes(ourMetadata.getTypes());
         }
 
-        if (ourMetadata.getDescription() != null) {
-            this.metadata.addDescription(ourMetadata.getDescription());
+        if (ourMetadata.getDescriptions() != null) {
+            this.metadata.setDescriptions(ourMetadata.getDescriptions());
+        }
+        
+        if (ourMetadata.getRelations() != null) {
+            this.metadata.setRelations(ourMetadata.getRelations());
         }
 
         if (ourMetadata.getRights() != null) {

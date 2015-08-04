@@ -41,12 +41,14 @@ public class EPubTest extends ClientAndLocalServerBase {
         Metadata metadata = new Metadata();
         ArrayList<String> titles = new ArrayList<>();
         ArrayList<String> authors = new ArrayList<>();
+        ArrayList<String> descriptions = new ArrayList<>();
         titles.add(title);
         authors.add(author);
         authors.add(author2);
         metadata.setTitles(titles);
         //metadata.setAuthors(authors);
-        metadata.setDescription(description);
+        descriptions.add(description);
+        metadata.setDescriptions(descriptions);
         Identifier id = new Identifier(null, "urn:ean:1234-7956-1356-1123");
         metadata.setIdentifier(id);
 

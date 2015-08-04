@@ -2,6 +2,7 @@ package eu.freme.eservices.epublishing;
 
 import eu.freme.eservices.epublishing.exception.EPubCreationException;
 import eu.freme.eservices.epublishing.exception.InvalidZipException;
+import eu.freme.eservices.epublishing.exception.MissingMetadataException;
 import eu.freme.eservices.epublishing.webservice.Metadata;
 import org.apache.commons.io.FileUtils;
 
@@ -22,7 +23,7 @@ public class EPublishingService {
     
     private static final String tempFolderPath = System.getProperty("java.io.tmpdir");
 
-    public byte[] createEPUB(Metadata metadata, InputStream in) throws InvalidZipException, EPubCreationException, IOException {
+    public byte[] createEPUB(Metadata metadata, InputStream in) throws InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
         // initialize the class that parses the input, and passes data to the EPUB creator
         String unzippedPath = tempFolderPath + File.separator + "freme_epublishing_" + System.currentTimeMillis();
         try (ZipInputStream zin = new ZipInputStream(in, StandardCharsets.UTF_8)) {
