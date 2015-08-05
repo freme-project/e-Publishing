@@ -20,34 +20,29 @@ import java.util.zip.ZipInputStream;
  * @author Pieter Heyvaert <pheyvaer.heyvaert@ugent.be>
  */
 public class EPublishingService {
-    
+
     private static final String tempFolderPath = System.getProperty("java.io.tmpdir");
 
     public byte[] createEPUB(Metadata metadata, InputStream in) throws InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
         // initialize the class that parses the input, and passes data to the EPUB creator
         String unzippedPath = tempFolderPath + File.separator + "freme_epublishing_" + System.currentTimeMillis();
+        ByteArrayOutputStream bos;
+                
         try (ZipInputStream zin = new ZipInputStream(in, StandardCharsets.UTF_8)) {
-            Unzipper.unzip(zin,unzippedPath);
+            Unzipper.unzip(zin, unzippedPath);
+
+            EPubCreator creator = new EPubCreatorImpl(metadata, unzippedPath);
+
+            // write the EPUB "file", in this case to bytes
+            bos = new ByteArrayOutputStream();
+            creator.onEnd(bos);
         } catch (IOException ex) {
             Logger.getLogger(EPublishingService.class.getName()).log(Level.SEVERE, null, ex);
             throw new InvalidZipException("Something went wrong with the provided Zip file. Make sure you are providing a valid Zip file.");
+        } finally {
+            File tempFolder = new File(unzippedPath);
+            FileUtils.deleteDirectory(tempFolder);
         }
-
-        // initialize class that will create the EPUB file
-        EPubCreator creator;
-        try {
-            creator = new EPubCreatorImpl(metadata, unzippedPath);
-        } catch (IOException ex) {
-            Logger.getLogger(EPublishingService.class.getName()).log(Level.SEVERE, null, ex);
-            throw new EPubCreationException("Something went wrong during the creation of the EPUB. Make sure you provide the correct information.");
-        }
-
-        // write the EPUB "file", in this case to bytes
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        creator.onEnd(bos);
-
-        File tempFolder = new File(unzippedPath);
-        FileUtils.deleteDirectory(tempFolder);
         
         return bos.toByteArray();
     }
