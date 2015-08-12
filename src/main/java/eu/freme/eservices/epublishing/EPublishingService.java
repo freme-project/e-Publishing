@@ -5,6 +5,7 @@ import eu.freme.eservices.epublishing.exception.InvalidZipException;
 import eu.freme.eservices.epublishing.exception.MissingMetadataException;
 import eu.freme.eservices.epublishing.webservice.Metadata;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -21,11 +22,13 @@ import java.util.zip.ZipInputStream;
  */
 public class EPublishingService {
 
-    private static final String tempFolderPath = System.getProperty("java.io.tmpdir");
+    private static final File tempFolderPath = getTempFolder();
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(EPublishingService.class);
 
     public byte[] createEPUB(Metadata metadata, InputStream in) throws InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
         // initialize the class that parses the input, and passes data to the EPUB creator
-        String unzippedPath = tempFolderPath + File.separator + "freme_epublishing_" + System.currentTimeMillis();
+        File unzippedPath = File.createTempFile("freme_publishing", null, tempFolderPath);
+        unzippedPath.deleteOnExit();    // doesn't work if not empty though...
         ByteArrayOutputStream bos;
                 
         try (ZipInputStream zin = new ZipInputStream(in, StandardCharsets.UTF_8)) {
@@ -40,10 +43,28 @@ public class EPublishingService {
             Logger.getLogger(EPublishingService.class.getName()).log(Level.SEVERE, null, ex);
             throw new InvalidZipException("Something went wrong with the provided Zip file. Make sure you are providing a valid Zip file.");
         } finally {
-            File tempFolder = new File(unzippedPath);
-            FileUtils.deleteDirectory(tempFolder);
+            FileUtils.deleteDirectory(unzippedPath);
         }
         
         return bos.toByteArray();
+    }
+
+    private static File getTempFolder() {
+        File tmpFolder = new File(System.getProperty("java.io.tmpdir", "/tmp"));
+        if (!testTmp(tmpFolder)) {
+            logger.warn("Not enough permissions on default temporary folder " + tmpFolder + "!! Trying current working dir...");    // replace with logger
+            // try the current working dir
+            File workingDir = new File(System.getProperty("user.dir", "/tmp"));
+            if (!testTmp(workingDir)) {
+                logger.warn("Not enough permissions current working directory " + workingDir + "!! Temporary files will be written in " + tmpFolder + " and will exist until manually deleted !!");    // replace with logger
+            } else {    // OK, make 'workingDir' the temporary folder
+                tmpFolder = workingDir;
+            }
+        }
+        return tmpFolder;
+    }
+
+    private static boolean testTmp(final File tmpFolder) {
+        return (tmpFolder.exists() && tmpFolder.isDirectory() && tmpFolder.canWrite() && tmpFolder.canExecute());
     }
 }
