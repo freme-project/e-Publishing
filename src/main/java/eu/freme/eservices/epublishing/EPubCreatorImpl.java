@@ -77,8 +77,7 @@ public class EPubCreatorImpl implements EPubCreator {
         if (ourMetadata.getPublicationDate() != null) {
             this.metadata.addDate(new Date(ourMetadata.getPublicationDate().getTime()));
         }
-
-        //TODO
+  
         if (ourMetadata.getSources() != null) {
             this.metadata.setSources(ourMetadata.getSources());
         }
