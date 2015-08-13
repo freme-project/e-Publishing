@@ -27,8 +27,8 @@ public class EPublishingService {
 
     public byte[] createEPUB(Metadata metadata, InputStream in) throws InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
         // initialize the class that parses the input, and passes data to the EPUB creator
-        File unzippedPath = File.createTempFile("freme_publishing", null, tempFolderPath);
-        unzippedPath.deleteOnExit();    // doesn't work if not empty though...
+        File unzippedPath = new File(tempFolderPath, "freme_epublishing_" + System.currentTimeMillis());
+        FileUtils.forceDeleteOnExit(unzippedPath);
         ByteArrayOutputStream bos;
                 
         try (ZipInputStream zin = new ZipInputStream(in, StandardCharsets.UTF_8)) {
