@@ -14,6 +14,7 @@ import org.junit.Test;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Ignore;
 
 /**
  *
@@ -31,6 +32,7 @@ public class EPUBCreationTest extends TestBase {
         
     }
     
+    @Ignore
     @Test
     public void testWithoutTitle() throws FileNotFoundException, InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
         Metadata metadata = getSimpleMetadataForZip();
@@ -52,7 +54,8 @@ public class EPUBCreationTest extends TestBase {
         Assert.assertTrue("All EPUB titles are in the given titles.", metadata.getTitles().containsAll(bookTitles));  
     }
     
-    //@Test
+    @Ignore
+    @Test
     public void testWithoutAuthor() throws FileNotFoundException, InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
         Metadata metadata = getSimpleMetadataForZip();
         //metadata.setAuthors(new ArrayList<String>());
@@ -79,6 +82,7 @@ public class EPUBCreationTest extends TestBase {
         Assert.assertTrue("All EPUB authors are in the given authors.", metadata.getAuthors().containsAll(bookAuthorsNames));
     }
     
+    @Ignore
     @Test
     public void testTitles() throws IOException, InvalidZipException, EPubCreationException, MissingMetadataException {
         String anotherTitle = "Alice in Europe";
@@ -102,7 +106,8 @@ public class EPUBCreationTest extends TestBase {
         Assert.assertTrue("All EPUB titles are in the given titles.", metadata.getTitles().containsAll(bookTitles));    
     }
     
-    //@Test
+    @Ignore
+    @Test
     public void testAuthors() throws IOException, InvalidZipException, EPubCreationException, MissingMetadataException {
         String anotherAuthor = "Nick Borth";
 
@@ -131,6 +136,7 @@ public class EPUBCreationTest extends TestBase {
         Assert.assertTrue("All EPUB authors are in the given authors.", metadata.getAuthors().containsAll(bookAuthorsNames));
     }
     
+    @Ignore
     @Test
     public void testCoverImage() throws IOException, InvalidZipException, EPubCreationException, MissingMetadataException {
         byte[] epub = getePublishingService().createEPUB(getSimpleMetadataForZip(), new FileInputStream(getZipFile()));

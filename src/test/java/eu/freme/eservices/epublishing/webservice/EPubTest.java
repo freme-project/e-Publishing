@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Ignore;
 
 /**
  * <p>
@@ -28,7 +29,8 @@ import java.util.List;
  */
 public class EPubTest extends ClientAndLocalServerBase {
 
-    //@Test
+    @Ignore
+    @Test
     public void TestAlice() throws IOException {
         String title = "Alice in Utopia";
         String author = "Joske Vermeulen";
@@ -90,7 +92,8 @@ public class EPubTest extends ClientAndLocalServerBase {
         Assert.assertTrue(authors.containsAll(bookAuthorsNames));
     }
 
-    //@Test
+    @Ignore
+    @Test
     public void TestSections() throws IOException {
         String title = "Alice in Utopia";
         String author = "Joske Vermeulen";
@@ -147,7 +150,8 @@ public class EPubTest extends ClientAndLocalServerBase {
         Assert.assertTrue("All EPUB authors are in the given authors.", authors.containsAll(bookAuthorsNames));
     }
 
-    //@Test
+    @Ignore
+    @Test
     public void TestCoverImage() throws IOException {
         String title = "Alice in Utopia";
         String author = "Joske Vermeulen";
