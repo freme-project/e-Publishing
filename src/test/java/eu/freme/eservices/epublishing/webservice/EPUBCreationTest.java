@@ -1,23 +1,19 @@
 package eu.freme.eservices.epublishing.webservice;
 
-import com.google.gson.Gson;
 import eu.freme.eservices.epublishing.exception.EPubCreationException;
 import eu.freme.eservices.epublishing.exception.InvalidZipException;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import nl.siegmann.epublib.domain.CreatorContributor;
+import eu.freme.eservices.epublishing.exception.MissingMetadataException;
 import nl.siegmann.epublib.domain.Book;
+import nl.siegmann.epublib.domain.CreatorContributor;
 import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.epub.EpubReader;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -36,7 +32,7 @@ public class EPUBCreationTest extends TestBase {
     }
     
     @Test
-    public void testWithoutTitle() throws FileNotFoundException, InvalidZipException, EPubCreationException, IOException {
+    public void testWithoutTitle() throws FileNotFoundException, InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
         Metadata metadata = getSimpleMetadataForZip();
         metadata.setTitles(new ArrayList<String>());
         
@@ -57,7 +53,7 @@ public class EPUBCreationTest extends TestBase {
     }
     
     //@Test
-    public void testWithoutAuthor() throws FileNotFoundException, InvalidZipException, EPubCreationException, IOException {
+    public void testWithoutAuthor() throws FileNotFoundException, InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
         Metadata metadata = getSimpleMetadataForZip();
         //metadata.setAuthors(new ArrayList<String>());
         
@@ -84,7 +80,7 @@ public class EPUBCreationTest extends TestBase {
     }
     
     @Test
-    public void testTitles() throws IOException, InvalidZipException, EPubCreationException {
+    public void testTitles() throws IOException, InvalidZipException, EPubCreationException, MissingMetadataException {
         String anotherTitle = "Alice in Europe";
         
         Metadata metadata = getSimpleMetadataForZip();
@@ -107,7 +103,7 @@ public class EPUBCreationTest extends TestBase {
     }
     
     //@Test
-    public void testAuthors() throws IOException, InvalidZipException, EPubCreationException {
+    public void testAuthors() throws IOException, InvalidZipException, EPubCreationException, MissingMetadataException {
         String anotherAuthor = "Nick Borth";
 
         Metadata metadata = getSimpleMetadataForZip();
@@ -136,7 +132,7 @@ public class EPUBCreationTest extends TestBase {
     }
     
     @Test
-    public void testCoverImage() throws IOException, InvalidZipException, EPubCreationException {
+    public void testCoverImage() throws IOException, InvalidZipException, EPubCreationException, MissingMetadataException {
         byte[] epub = getePublishingService().createEPUB(getSimpleMetadataForZip(), new FileInputStream(getZipFile()));
 
         // write it to a (temporary) file

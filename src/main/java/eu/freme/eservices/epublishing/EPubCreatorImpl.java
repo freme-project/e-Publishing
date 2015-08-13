@@ -3,20 +3,16 @@ package eu.freme.eservices.epublishing;
 import eu.freme.eservices.epublishing.exception.MissingMetadataException;
 import eu.freme.eservices.epublishing.webservice.Person;
 import eu.freme.eservices.epublishing.webservice.Section;
+import nl.siegmann.epublib.bookprocessor.Epub2HtmlCleanerBookProcessor;
+import nl.siegmann.epublib.bookprocessor.Epub3HtmlCleanerBookProcessor;
 import nl.siegmann.epublib.domain.*;
-import nl.siegmann.epublib.epub.BookProcessor;
-import nl.siegmann.epublib.epub.BookProcessorPipeline;
+import nl.siegmann.epublib.epub.*;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import nl.siegmann.epublib.bookprocessor.Epub2HtmlCleanerBookProcessor;
-import nl.siegmann.epublib.bookprocessor.Epub3HtmlCleanerBookProcessor;
-import nl.siegmann.epublib.epub.Epub2Writer;
-import nl.siegmann.epublib.epub.Epub3Writer;
-import nl.siegmann.epublib.epub.EpubWriter;
 
 /**
  * <p>
@@ -36,10 +32,10 @@ public class EPubCreatorImpl implements EPubCreator {
     private final Book book;
     private final Metadata metadata;
     private final eu.freme.eservices.epublishing.webservice.Metadata ourMetadata;
-    private final String unzippedPath;
+    private final File unzippedPath;
     private final EpubWriter epubWriter;
 
-    public EPubCreatorImpl(final eu.freme.eservices.epublishing.webservice.Metadata ourMetadata, final String unzippedPath) throws IOException, MissingMetadataException {
+    public EPubCreatorImpl(final eu.freme.eservices.epublishing.webservice.Metadata ourMetadata, final File unzippedPath) throws IOException, MissingMetadataException {
         book = new Book();
         this.metadata = new Metadata();
         this.unzippedPath = unzippedPath;
@@ -122,7 +118,7 @@ public class EPubCreatorImpl implements EPubCreator {
     }
 
     private void addCoverImage(String coverImage) throws IOException {
-        book.setCoverImage(new Resource(new FileInputStream(unzippedPath + File.separator + coverImage), coverImage));
+        book.setCoverImage(new Resource(new FileInputStream(new File(unzippedPath, coverImage)), coverImage));
     }
 
     private void addCreators(List<Person> creators) {
@@ -143,7 +139,7 @@ public class EPubCreatorImpl implements EPubCreator {
 
     private void createSections(List<Section> toc, TOCReference parentSection) throws IOException {
         for (Section section : toc) {
-            Resource resource = new Resource(new FileInputStream(unzippedPath + File.separator + section.getResource()), section.getResource());
+            Resource resource = new Resource(new FileInputStream(new File(unzippedPath, section.getResource())), section.getResource());
 
             TOCReference bookSection;
             if (parentSection == null) {
@@ -164,9 +160,9 @@ public class EPubCreatorImpl implements EPubCreator {
         File folder;
 
         if (parent == null || parent.equals("")) {
-            folder = new File(unzippedPath);
+            folder = unzippedPath;
         } else {
-            folder = new File(unzippedPath + File.pathSeparator + parent);
+            folder = new File(unzippedPath, parent);
         }
 
         File[] listOfFiles = folder.listFiles();
@@ -210,9 +206,9 @@ public class EPubCreatorImpl implements EPubCreator {
         File folder;
 
         if (parent == null || parent.equals("")) {
-            folder = new File(unzippedPath);
+            folder = unzippedPath;
         } else {
-            folder = new File(unzippedPath + File.separator + parent);
+            folder = new File(unzippedPath, parent);
         }
 
         File[] listOfFiles = folder.listFiles();
