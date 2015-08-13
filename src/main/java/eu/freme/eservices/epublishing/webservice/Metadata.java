@@ -10,8 +10,8 @@ import java.util.List;
  */
 public class Metadata {
     
-    private List<String> titles, subjects, sources, relations, types, descriptions;
-    private String language, rights, coverImage, epubVersion;
+    private List<String> titles, subjects, sources, relations, types, descriptions, rights;
+    private String language, coverImage, epubVersion;
     private Calendar publicationDate;
     private List<Section> tableOfContents;
     private Identifier identifier;
@@ -92,11 +92,11 @@ public class Metadata {
         this.descriptions = descriptions;
     }
 
-    public String getRights() {
+    public List<String> getRights() {
         return rights;
     }
 
-    public void setRights(String rights) {
+    public void setRights(List<String> rights) {
         this.rights = rights;
     }
 

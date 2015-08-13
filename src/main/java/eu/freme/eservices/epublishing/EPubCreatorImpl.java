@@ -95,9 +95,7 @@ public class EPubCreatorImpl implements EPubCreator {
         }
 
         if (ourMetadata.getRights() != null) {
-            List<String> rights = new ArrayList<>();
-            rights.add(ourMetadata.getRights());
-            this.metadata.setRights(rights);
+            this.metadata.setRights(ourMetadata.getRights());
         }
 
         if (ourMetadata.getTableOfContents() == null) {
