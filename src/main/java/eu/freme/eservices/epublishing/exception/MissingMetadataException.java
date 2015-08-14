@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  */
 
 @ResponseStatus(value=HttpStatus.BAD_REQUEST, reason="")
-public class InvalidZipException extends Exception {
+public class MissingMetadataException extends Exception {
     
-    public InvalidZipException(String message) {
+    public MissingMetadataException(String message) {
         super(message);
     }
 }

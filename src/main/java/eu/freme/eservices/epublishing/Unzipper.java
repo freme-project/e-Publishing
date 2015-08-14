@@ -14,12 +14,11 @@ import java.util.zip.ZipInputStream;
  */
 public class Unzipper {
 
-    public static void unzip(ZipInputStream zis, String outputFolder) throws IOException {
+    public static void unzip(ZipInputStream zis, File outputFolder) throws IOException {
         //create output directory is not exists
-        File folder = new File(outputFolder);
 
-        if (!folder.exists() && !folder.mkdirs()) {
-            throw new IOException("Cannot create directory " + folder);
+        if (!outputFolder.exists() && !outputFolder.mkdirs()) {
+            throw new IOException("Cannot create directory " + outputFolder);
         }
 
         //get the zipped file list entry

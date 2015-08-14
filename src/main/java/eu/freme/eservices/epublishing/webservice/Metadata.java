@@ -10,11 +10,12 @@ import java.util.List;
  */
 public class Metadata {
     
-    private List<String> titles, authors, illustrators, creators, subjects;
-    private String language, source, type, description, rights, coverImage;
+    private List<String> titles, subjects, sources, relations, types, descriptions, rights;
+    private String language, coverImage, epubVersion;
     private Calendar publicationDate;
     private List<Section> tableOfContents;
     private Identifier identifier;
+    private List<Person> creators, contributors;
     
     public Metadata() {
         
@@ -27,28 +28,11 @@ public class Metadata {
     public void setTitles(List<String> titles) {
         this.titles = titles;
     }
-
-    public List<String> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(List<String> authors) {
-        this.authors = authors;
-    }
-
-    public List<String> getIllustrators() {
-        return illustrators;
-    }
-
-    public void setIllustrators(List<String> illustrators) {
-        this.illustrators = illustrators;
-    }
-
-    public List<String> getCreators() {
+    public List<Person> getCreators() {
         return creators;
     }
 
-    public void setCreators(List<String> creators) {
+    public void setCreators(List<Person> creators) {
         this.creators = creators;
     }
 
@@ -84,35 +68,35 @@ public class Metadata {
         this.publicationDate = publicationDate;
     }
 
-    public String getSource() {
-        return source;
+    public List<String> getSources() {
+        return sources;
     }
 
-    public void setSource(String source) {
-        this.source = source;
+    public void setSources(List<String> sources) {
+        this.sources = sources;
     }
 
-    public String getType() {
-        return type;
+    public List<String> getTypes() {
+        return types;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypes(List<String> types) {
+        this.types = types;
     }
 
-    public String getDescription() {
-        return description;
+    public List<String> getDescriptions() {
+        return descriptions;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptions(List<String> descriptions) {
+        this.descriptions = descriptions;
     }
 
-    public String getRights() {
+    public List<String> getRights() {
         return rights;
     }
 
-    public void setRights(String rights) {
+    public void setRights(List<String> rights) {
         this.rights = rights;
     }
 
@@ -136,13 +120,63 @@ public class Metadata {
         if (titles == null) {
             titles = new ArrayList<>();
         }
+        
         titles.add(title);
     }
+
+    public String getEPUBVersion() {
+        return epubVersion;
+    }
+
+    public void setEPUBVersion(String epubVersion) {
+        this.epubVersion = epubVersion;
+    }
+
+    public List<Person> getContributors() {
+        return contributors;
+    }
+
+    public void setContributors(List<Person> contributors) {
+        this.contributors = contributors;
+    }
     
-    public void addAuthor(String author) {
-        if (authors == null) {
-            authors = new ArrayList<>();
+    public List<Person> getAuthors() {
+        ArrayList<Person> authors = new ArrayList<>();
+        authors.addAll(getCreators("author"));
+        authors.addAll(getContributors("author"));
+        
+        return authors;
+    }
+    
+    public List<Person> getCreators(String role) {
+        ArrayList<Person> people = new ArrayList<>();
+        
+        for (Person c : creators) {
+            if (c.hasRole(role)) {
+                people.add(c);
+            }
         }
-        authors.add(author);
+        
+        return people;
+    }
+    
+    public List<Person> getContributors(String role) {
+        ArrayList<Person> people = new ArrayList<>();
+        
+        for (Person c : contributors) {
+            if (c.hasRole(role)) {
+                people.add(c);
+            }
+        }
+        
+        return people;
+    }
+
+    public List<String> getRelations() {
+        return relations;
+    }
+
+    public void setRelations(List<String> relations) {
+        this.relations = relations;
     }
 }

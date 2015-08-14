@@ -49,7 +49,7 @@ public abstract class TestBase {
         titles.add(title);
         authors.add(author);
         metadata.setTitles(titles);
-        metadata.setAuthors(authors);
+        //metadata.setAuthors(authors);
         toc.add(new Section("Chapter 1", "01.xhtml"));
         toc.add(new Section("Chapter 2", "02.xhtml"));
         metadata.setTableOfContents(toc);
