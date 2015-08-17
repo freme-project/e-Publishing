@@ -197,12 +197,12 @@
 
 		<!-- epublib dependencies -->
 		<dependency>
-			<groupId>nl.siegmann.epublib</groupId>
+			<groupId>eu.freme</groupId>
 			<artifactId>epublib-core</artifactId>
 			<version>3.1</version>
 		</dependency>
 		<dependency>
-			<groupId>nl.siegmann.epublib</groupId>
+			<groupId>eu.freme</groupId>
 			<artifactId>epublib-tools</artifactId>
 			<version>3.1</version>
 		</dependency>
