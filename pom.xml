@@ -199,12 +199,12 @@
 		<dependency>
 			<groupId>eu.freme</groupId>
 			<artifactId>epublib-core</artifactId>
-			<version>3.1</version>
+			<version>0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.freme</groupId>
 			<artifactId>epublib-tools</artifactId>
-			<version>3.1</version>
+			<version>0.3-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
