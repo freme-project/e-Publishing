@@ -19,7 +19,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.freme</groupId>
 	<artifactId>e-publishing</artifactId>
-	<version>0.3-SNAPSHOT</version>
+	<version>0.4-SNAPSHOT</version>
 	<name>e-Publishing</name>
 	<inceptionYear>2015</inceptionYear>
 
@@ -244,14 +244,14 @@
 
 		<!-- epublib dependencies -->
 		<dependency>
-			<groupId>nl.siegmann.epublib</groupId>
+			<groupId>eu.freme</groupId>
 			<artifactId>epublib-core</artifactId>
-			<version>3.1</version>
+			<version>0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>nl.siegmann.epublib</groupId>
+			<groupId>eu.freme</groupId>
 			<artifactId>epublib-tools</artifactId>
-			<version>3.1</version>
+			<version>0.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

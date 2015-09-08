@@ -15,12 +15,13 @@
  */
 package eu.freme.eservices.epublishing;
 
+import eu.freme.eservices.epublishing.exception.MissingMetadataException;
+import eu.freme.eservices.epublishing.webservice.Person;
 import eu.freme.eservices.epublishing.webservice.Section;
-import nl.siegmann.epublib.bookprocessor.HtmlCleanerBookProcessor;
+import nl.siegmann.epublib.bookprocessor.Epub2HtmlCleanerBookProcessor;
+import nl.siegmann.epublib.bookprocessor.Epub3HtmlCleanerBookProcessor;
 import nl.siegmann.epublib.domain.*;
-import nl.siegmann.epublib.epub.BookProcessor;
-import nl.siegmann.epublib.epub.BookProcessorPipeline;
-import nl.siegmann.epublib.epub.EpubWriter;
+import nl.siegmann.epublib.epub.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -46,18 +47,19 @@ public class EPubCreatorImpl implements EPubCreator {
     private final Book book;
     private final Metadata metadata;
     private final eu.freme.eservices.epublishing.webservice.Metadata ourMetadata;
-    private final String unzippedPath;
+    private final File unzippedPath;
+    private final EpubWriter epubWriter;
 
-    public EPubCreatorImpl(final eu.freme.eservices.epublishing.webservice.Metadata ourMetadata, final String unzippedPath) throws IOException {
+    public EPubCreatorImpl(final eu.freme.eservices.epublishing.webservice.Metadata ourMetadata, final File unzippedPath) throws IOException, MissingMetadataException {
         book = new Book();
         this.metadata = new Metadata();
         this.unzippedPath = unzippedPath;
         this.ourMetadata = ourMetadata;
 
-        addAuthors(ourMetadata.getAuthors());
-        addIllustrators(ourMetadata.getIllustrators());
+        addCreators(ourMetadata.getCreators());
+        addContributors(ourMetadata.getContributors());
 
-        if (metadata.getLanguage() != null) {
+        if (ourMetadata.getLanguage() != null) {
             this.metadata.setLanguage(ourMetadata.getLanguage());
         }
 
@@ -69,10 +71,14 @@ public class EPubCreatorImpl implements EPubCreator {
             }
             
             this.metadata.addIdentifier(new Identifier(scheme, ourMetadata.getIdentifier().getValue()));
+        } else {
+            throw new MissingMetadataException("Identifier is missing.");
         }
 
-        if (ourMetadata.getTitles() != null) {
+        if (ourMetadata.getTitles() != null && !ourMetadata.getTitles().isEmpty()) {
             this.metadata.setTitles(ourMetadata.getTitles());
+        } else {
+            throw new MissingMetadataException("At least one title is required.");
         }
 
         if (ourMetadata.getSubjects() != null) {
@@ -82,23 +88,25 @@ public class EPubCreatorImpl implements EPubCreator {
         if (ourMetadata.getPublicationDate() != null) {
             this.metadata.addDate(new Date(ourMetadata.getPublicationDate().getTime()));
         }
-
-        //TODO
-        if (ourMetadata.getSource() != null) {
+  
+        if (ourMetadata.getSources() != null) {
+            this.metadata.setSources(ourMetadata.getSources());
         }
 
-        if (ourMetadata.getType() != null) {
-            this.metadata.addType(ourMetadata.getType());
+        if (ourMetadata.getTypes() != null) {
+            this.metadata.setTypes(ourMetadata.getTypes());
         }
 
-        if (ourMetadata.getDescription() != null) {
-            this.metadata.addDescription(ourMetadata.getDescription());
+        if (ourMetadata.getDescriptions() != null) {
+            this.metadata.setDescriptions(ourMetadata.getDescriptions());
+        }
+        
+        if (ourMetadata.getRelations() != null) {
+            this.metadata.setRelations(ourMetadata.getRelations());
         }
 
         if (ourMetadata.getRights() != null) {
-            List<String> rights = new ArrayList<>();
-            rights.add(ourMetadata.getRights());
-            this.metadata.setRights(rights);
+            this.metadata.setRights(ourMetadata.getRights());
         }
 
         if (ourMetadata.getTableOfContents() == null) {
@@ -112,31 +120,41 @@ public class EPubCreatorImpl implements EPubCreator {
         }
 
         copyUnaddedFilesFromZipToEpub(null);
-    }
-
-    private void addCoverImage(String coverImage) throws IOException {
-        book.setCoverImage(new Resource(new FileInputStream(unzippedPath + File.separator + coverImage), coverImage));
-    }
-
-    private void addIllustrators(List<String> illustrators) {
-        if (illustrators != null) {
-            for (String illustrator : illustrators) {
-                metadata.addContributor(new Author(illustrator));
-            }
+        
+        if (ourMetadata.getEPUBVersion() != null && ourMetadata.getEPUBVersion().equals("2")) {
+            BookProcessor[] bookProcessors = {new Epub2HtmlCleanerBookProcessor()};
+            BookProcessor bookProcessorPipeline = new BookProcessorPipeline(Arrays.asList(bookProcessors));
+            epubWriter = new Epub2Writer(bookProcessorPipeline);
+        } else {
+            BookProcessor[] bookProcessors = {new Epub3HtmlCleanerBookProcessor()};
+            BookProcessor bookProcessorPipeline = new BookProcessorPipeline(Arrays.asList(bookProcessors));
+            epubWriter = new Epub3Writer(bookProcessorPipeline);
         }
     }
 
-    private void addAuthors(List<String> authors) {
-        if (authors != null) {
-            for (String author : authors) {
-                metadata.addAuthor(new Author(author));
+    private void addCoverImage(String coverImage) throws IOException {
+        book.setCoverImage(new Resource(new FileInputStream(new File(unzippedPath, coverImage)), coverImage));
+    }
+
+    private void addCreators(List<Person> creators) {
+        if (creators != null) {
+            for (Person creator : creators) {
+                metadata.addCreator(new CreatorContributor(creator.getFirstName(), creator.getLastName(), creator.getRoles()));
+            }
+        }
+    }
+    
+     private void addContributors(List<Person> contributors) {
+        if (contributors != null) {
+            for (Person contributor : contributors) {
+                metadata.addContributor(new CreatorContributor(contributor.getFirstName(), contributor.getLastName(), contributor.getRoles()));
             }
         }
     }
 
     private void createSections(List<Section> toc, TOCReference parentSection) throws IOException {
         for (Section section : toc) {
-            Resource resource = new Resource(new FileInputStream(unzippedPath + File.separator + section.getResource()), section.getResource());
+            Resource resource = new Resource(new FileInputStream(new File(unzippedPath, section.getResource())), section.getResource());
 
             TOCReference bookSection;
             if (parentSection == null) {
@@ -157,9 +175,9 @@ public class EPubCreatorImpl implements EPubCreator {
         File folder;
 
         if (parent == null || parent.equals("")) {
-            folder = new File(unzippedPath);
+            folder = unzippedPath;
         } else {
-            folder = new File(unzippedPath + File.pathSeparator + parent);
+            folder = new File(unzippedPath, parent);
         }
 
         File[] listOfFiles = folder.listFiles();
@@ -203,9 +221,9 @@ public class EPubCreatorImpl implements EPubCreator {
         File folder;
 
         if (parent == null || parent.equals("")) {
-            folder = new File(unzippedPath);
+            folder = unzippedPath;
         } else {
-            folder = new File(unzippedPath + File.separator + parent);
+            folder = new File(unzippedPath, parent);
         }
 
         File[] listOfFiles = folder.listFiles();
@@ -255,10 +273,7 @@ public class EPubCreatorImpl implements EPubCreator {
     @Override
     public void onEnd(OutputStream out) throws IOException {
         book.setMetadata(metadata);
-        BookProcessor[] bookProcessors = {new HtmlCleanerBookProcessor() /*, AnotherBookProcessor, ... */};
-        BookProcessor bookProcessorPipeline = new BookProcessorPipeline(Arrays.asList(bookProcessors));
-        EpubWriter writer = new EpubWriter(bookProcessorPipeline);
-        writer.write(book, out);
+        epubWriter.write(book, out);
     }
 
     private String getBaseName(final String name) {
