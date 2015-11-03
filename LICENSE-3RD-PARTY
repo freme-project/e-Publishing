@@ -19,6 +19,8 @@ applies to:
 	- Apache Maven Plugins - maven-resources-plugin:2.6, Copyright 2002-2015 The Apache Software Foundation. All rights reserved.
 	- Apache Maven Plugins - maven-site-plugin:3.3
 	- Apache Maven Plugins - maven-surefire-plugin:2.12.4, Copyright 2002-2015 The Apache Software Foundation. All rights reserved.
+	- Freme - epublib-core:0.4-SNAPSHOT, Copyright 2015 Agro-Know, Deutsches Forschungszentrum für Künstliche Intelligenz, iMinds, Institut für Angewandte Informatik e. V. an der Universität Leipzig, Istituto Superiore Mario Boella, Tilde, Vistatec, WRIPL
+	- Freme - epublib-tools:0.4-SNAPSHOT, Copyright 2015 Agro-Know, Deutsches Forschungszentrum für Künstliche Intelligenz, iMinds, Institut für Angewandte Informatik e. V. an der Universität Leipzig, Istituto Superiore Mario Boella, Tilde, Vistatec, WRIPL
 	- Freme: Epublib Core - epublib-core:0.2-SNAPSHOT, Copyright 2015 Agro-Know, Deutsches Forschungszentrum für Künstliche Intelligenz, iMinds, Institut für Angewandte Informatik e. V. an der Universität Leipzig, Istituto Superiore Mario Boella, Tilde, Vistatec, WRIPL
 	- Freme: Epublib Tools - epublib-tools:0.2-SNAPSHOT, Copyright 2015 Agro-Know, Deutsches Forschungszentrum für Künstliche Intelligenz, iMinds, Institut für Angewandte Informatik e. V. an der Universität Leipzig, Istituto Superiore Mario Boella, Tilde, Vistatec, WRIPL
 	- Gson - gson:2.3.1, Copyright 2015 The Apache Software Foundation. All Rights Reserved.
