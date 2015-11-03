@@ -135,7 +135,9 @@ public class EPubCreatorImpl implements EPubCreator {
     }
 
     private void addCoverImage(String coverImage) throws IOException {
-        book.setCoverImage(new Resource(new FileInputStream(new File(unzippedPath, coverImage)), coverImage));
+        FileInputStream fis = new FileInputStream(new File(unzippedPath, coverImage));
+        book.setCoverImage(new Resource(fis, coverImage));
+        fis.close();
     }
 
     private void addCreators(List<Person> creators) {
@@ -156,7 +158,9 @@ public class EPubCreatorImpl implements EPubCreator {
 
     private void createSections(List<Section> toc, TOCReference parentSection) throws IOException {
         for (Section section : toc) {
-            Resource resource = new Resource(new FileInputStream(new File(unzippedPath, section.getResource())), section.getResource());
+            FileInputStream fis = new FileInputStream(new File(unzippedPath, section.getResource()));
+            Resource resource = new Resource(fis, section.getResource());
+            fis.close();
 
             TOCReference bookSection;
             if (parentSection == null) {
@@ -234,9 +238,13 @@ public class EPubCreatorImpl implements EPubCreator {
             for (File listOfFile : listOfFiles) {
                 if (listOfFile.isFile() && !isFileAlreadyAdded(listOfFile)) {
                     if (parent == null || parent.equals("")) {
-                        book.addResource(new Resource(new FileInputStream(listOfFile), listOfFile.getName()));
+                        FileInputStream fis = new FileInputStream(listOfFile);
+                        book.addResource(new Resource(fis, listOfFile.getName()));
+                        fis.close();
                     } else {
-                        book.addResource(new Resource(new FileInputStream(listOfFile), parent + File.separator + listOfFile.getName()));
+                        FileInputStream fis = new FileInputStream(listOfFile);
+                        book.addResource(new Resource(fis, parent + File.separator + listOfFile.getName()));
+                        fis.close();
                     }
                 } else if (listOfFile.isDirectory()) {
                     if (parent == null || parent.equals("")) {

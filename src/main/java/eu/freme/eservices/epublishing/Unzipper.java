@@ -18,6 +18,7 @@
 package eu.freme.eservices.epublishing;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,6 +31,8 @@ import java.util.zip.ZipInputStream;
  * @author Pieter Heyvaert <pheyvaer.heyvaert@ugent.be>
  */
 public class Unzipper {
+
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(EPublishingService.class);
 
     public static void unzip(ZipInputStream zis, File outputFolder) throws IOException {
         //create output directory is not exists
@@ -45,7 +48,7 @@ public class Unzipper {
             String fileName = ze.getName();
             File newFile = new File(outputFolder, fileName);
 
-            System.out.println("file unzip : " + newFile.getAbsoluteFile());
+            logger.debug("file unzip : " + newFile.getAbsoluteFile());
 
             //create all non exists folders
             //else you will hit FileNotFoundException for compressed folder
