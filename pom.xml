@@ -70,7 +70,7 @@
 
 	<build>
 		<plugins>
-			<plugin> <!-- set compiler to 1.7 source and target -->
+			<plugin> <!-- set compiler to 1.8 source and target -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
@@ -104,6 +104,22 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-javadoc-plugin</artifactId>
+			    <version>2.9</version>
+			    <executions>
+				<execution>
+				    <id>attach-javadocs</id>
+				    <goals>
+					<goal>jar</goal>
+				    </goals>
+				    <configuration>
+					<additionalparam>-Xdoclint:none</additionalparam>
+				    </configuration>
+				</execution>
+			    </executions>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -246,12 +262,12 @@ Istituto Superiore Mario Boella, Tilde, Vistatec, WRIPL
 		<dependency>
 			<groupId>eu.freme</groupId>
 			<artifactId>epublib-core</artifactId>
-			<version>0.4-SNAPSHOT</version>
+			<version>0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.freme</groupId>
 			<artifactId>epublib-tools</artifactId>
-			<version>0.4-SNAPSHOT</version>
+			<version>0.4</version>
 		</dependency>
 	</dependencies>
 
