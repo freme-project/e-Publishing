@@ -20,7 +20,6 @@ package eu.freme.eservices.epublishing;
 import eu.freme.eservices.epublishing.exception.MissingMetadataException;
 import eu.freme.eservices.epublishing.webservice.Person;
 import eu.freme.eservices.epublishing.webservice.Section;
-import nl.siegmann.epublib.Constants;
 import nl.siegmann.epublib.bookprocessor.Epub2HtmlCleanerBookProcessor;
 import nl.siegmann.epublib.bookprocessor.Epub3HtmlCleanerBookProcessor;
 import nl.siegmann.epublib.domain.*;
@@ -258,35 +257,8 @@ public class EPubCreatorImpl implements EPubCreator {
     }
 
     @Override
-    public void onText(String name, String contents) throws IOException {
-        String href = getBaseName(name);
-        Resource resource = new Resource(contents.getBytes(Constants.CHARACTER_ENCODING), href);
-        if (name.endsWith("html")) {
-            book.addSection("TO DO: chapter title", resource);
-        } else if (name.endsWith(".css")) {
-            book.getResources().add(resource);
-        }
-    }
-
-    @Override
-    public void onBinary(String name, byte[] contents) throws IOException {
-        String href = getBaseName(name);
-        Resource resource = new Resource(contents, href);
-        book.addResource(resource);
-    }
-
-    @Override
     public void onEnd(OutputStream out) throws IOException {
         book.setMetadata(metadata);
         epubWriter.write(book, out);
-    }
-
-    private String getBaseName(final String name) {
-        int slashIndex = name.indexOf(File.separator);
-        if (slashIndex == -1) {
-            return name;
-        } else {
-            return name.substring(name.lastIndexOf(File.separator));
-        }
     }
 }

@@ -28,25 +28,5 @@ import java.io.OutputStream;
  * @author Gerald Haesendonck
  */
 public interface EPubCreator {
-
-	/**
-	 * Called when a text file is found in the archive.
-	 * @param name		The name of the file as stored in the archive.
-	 * @param contents  The textual contents of the file. It assumes the text is encoded as UTF-8.
-	 */
-	void onText(final String name, final String contents) throws IOException;
-
-	/**
-	 * Called when a binary file is found in the archive OR if the file is not recognized as text.
-	 * @param name      The name of the file as stored in the archive.
-	 * @param contents  The binary contents of the file.
-	 */
-	void onBinary(final String name, final byte[] contents) throws IOException;
-
-	/**
-	 * Called when the end of the archive is reached. In other words: game over.
-	 * @param out	    The book will be written to this stream when finished.
-	 *                  The caller of this method is responible for closing the stream!
-	 */
 	void onEnd(final OutputStream out) throws IOException;
 }
