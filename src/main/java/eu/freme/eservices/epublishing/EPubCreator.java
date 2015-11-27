@@ -46,6 +46,7 @@ public interface EPubCreator {
 	/**
 	 * Called when the end of the archive is reached. In other words: game over.
 	 * @param out	    The book will be written to this stream when finished.
+	 *                  The caller of this method is responible for closing the stream!
 	 */
 	void onEnd(final OutputStream out) throws IOException;
 }

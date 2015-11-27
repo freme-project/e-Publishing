@@ -42,28 +42,37 @@ public class EPublishingService {
     private static final File tempFolderPath = getTempFolder();
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(EPublishingService.class);
 
+	/**
+     * Creates an EPUB3 file from the input stream.
+     * @param metadata  Some extra meta data
+     * @param in        The input. It is supposed to be a zip file. The caller of this method is responsible for closing the stream!
+     * @return          The EPUB. It is the binary contents of a zipped EPUB-3 file.
+     * @throws InvalidZipException
+     * @throws EPubCreationException
+     * @throws IOException
+     * @throws MissingMetadataException
+	 */
     public byte[] createEPUB(Metadata metadata, InputStream in) throws InvalidZipException, EPubCreationException, IOException, MissingMetadataException {
         // initialize the class that parses the input, and passes data to the EPUB creator
         File unzippedPath = new File(tempFolderPath, "freme_epublishing_" + System.currentTimeMillis());
         FileUtils.forceDeleteOnExit(unzippedPath);
-        ByteArrayOutputStream bos;
-                
+
         try (ZipInputStream zin = new ZipInputStream(in, StandardCharsets.UTF_8)) {
             Unzipper.unzip(zin, unzippedPath);
 
             EPubCreator creator = new EPubCreatorImpl(metadata, unzippedPath);
 
             // write the EPUB "file", in this case to bytes
-            bos = new ByteArrayOutputStream();
-            creator.onEnd(bos);
+            try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+                creator.onEnd(bos);
+                return bos.toByteArray();
+            }
         } catch (IOException ex) {
             Logger.getLogger(EPublishingService.class.getName()).log(Level.SEVERE, null, ex);
             throw new InvalidZipException("Something went wrong with the provided Zip file. Make sure you are providing a valid Zip file.");
         } finally {
             FileUtils.deleteDirectory(unzippedPath);
         }
-        
-        return bos.toByteArray();
     }
 
     private static File getTempFolder() {

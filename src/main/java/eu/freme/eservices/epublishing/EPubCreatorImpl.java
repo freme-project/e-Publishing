@@ -20,15 +20,18 @@ package eu.freme.eservices.epublishing;
 import eu.freme.eservices.epublishing.exception.MissingMetadataException;
 import eu.freme.eservices.epublishing.webservice.Person;
 import eu.freme.eservices.epublishing.webservice.Section;
+import nl.siegmann.epublib.Constants;
 import nl.siegmann.epublib.bookprocessor.Epub2HtmlCleanerBookProcessor;
 import nl.siegmann.epublib.bookprocessor.Epub3HtmlCleanerBookProcessor;
 import nl.siegmann.epublib.domain.*;
 import nl.siegmann.epublib.epub.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -135,9 +138,9 @@ public class EPubCreatorImpl implements EPubCreator {
     }
 
     private void addCoverImage(String coverImage) throws IOException {
-        FileInputStream fis = new FileInputStream(new File(unzippedPath, coverImage));
-        book.setCoverImage(new Resource(fis, coverImage));
-        fis.close();
+        try (FileInputStream fis = new FileInputStream(new File(unzippedPath, coverImage))) {
+            book.setCoverImage(new Resource(fis, coverImage));
+        }
     }
 
     private void addCreators(List<Person> creators) {
@@ -158,9 +161,10 @@ public class EPubCreatorImpl implements EPubCreator {
 
     private void createSections(List<Section> toc, TOCReference parentSection) throws IOException {
         for (Section section : toc) {
-            FileInputStream fis = new FileInputStream(new File(unzippedPath, section.getResource()));
-            Resource resource = new Resource(fis, section.getResource());
-            fis.close();
+            Resource resource;
+            try (FileInputStream fis = new FileInputStream(new File(unzippedPath, section.getResource()))) {
+                resource = new Resource(fis, section.getResource());
+            }
 
             TOCReference bookSection;
             if (parentSection == null) {
@@ -189,16 +193,7 @@ public class EPubCreatorImpl implements EPubCreator {
         File[] listOfFiles = folder.listFiles();
 
         if (listOfFiles != null) {
-            Arrays.sort(listOfFiles, new Comparator<File>() {
-
-                @Override
-                public int compare(File o1, File o2) {
-                    return o1.getName().compareTo(o2.getName());
-                }
-            });
-
-
-            //Arrays.sort(listOfFiles, (File o1, File o2) -> o1.getName().compareTo(o2.getName()));
+            Arrays.sort(listOfFiles, (file1, file2) -> file1.getName().compareTo(file2.getName()));
 
             for (File listOfFile : listOfFiles) {
                 if (listOfFile.isFile() && (listOfFile.getName().endsWith(".html") || listOfFile.getName().endsWith(".xhtml"))) {
@@ -238,13 +233,13 @@ public class EPubCreatorImpl implements EPubCreator {
             for (File listOfFile : listOfFiles) {
                 if (listOfFile.isFile() && !isFileAlreadyAdded(listOfFile)) {
                     if (parent == null || parent.equals("")) {
-                        FileInputStream fis = new FileInputStream(listOfFile);
-                        book.addResource(new Resource(fis, listOfFile.getName()));
-                        fis.close();
+                        try (FileInputStream fis = new FileInputStream(listOfFile)) {
+                            book.addResource(new Resource(fis, listOfFile.getName()));
+                        }
                     } else {
-                        FileInputStream fis = new FileInputStream(listOfFile);
-                        book.addResource(new Resource(fis, parent + File.separator + listOfFile.getName()));
-                        fis.close();
+                        try (FileInputStream fis = new FileInputStream(listOfFile)) {
+                            book.addResource(new Resource(fis, parent + File.separator + listOfFile.getName()));
+                        }
                     }
                 } else if (listOfFile.isDirectory()) {
                     if (parent == null || parent.equals("")) {
@@ -265,7 +260,7 @@ public class EPubCreatorImpl implements EPubCreator {
     @Override
     public void onText(String name, String contents) throws IOException {
         String href = getBaseName(name);
-        Resource resource = new Resource(new StringReader(contents), href);
+        Resource resource = new Resource(contents.getBytes(Constants.CHARACTER_ENCODING), href);
         if (name.endsWith("html")) {
             book.addSection("TO DO: chapter title", resource);
         } else if (name.endsWith(".css")) {

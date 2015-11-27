@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *
@@ -52,6 +53,8 @@ public class ServiceRestController {
         Metadata metadata = gson.fromJson(jMetadata, Metadata.class);
         MultiValueMap<String, String> headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "Application/epub+zip");
-        return new ResponseEntity<>(epubAPI.createEPUB(metadata, file.getInputStream()), headers, HttpStatus.OK);
+        try (InputStream in = file.getInputStream()) {
+            return new ResponseEntity<>(epubAPI.createEPUB(metadata, in), headers, HttpStatus.OK);
+        }
     }
 }
