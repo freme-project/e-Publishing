@@ -267,7 +267,7 @@ Istituto Superiore Mario Boella, Tilde, Vistatec, WRIPL
 		<dependency>
 			<groupId>eu.freme</groupId>
 			<artifactId>epublib-tools</artifactId>
-			<version>0.2</version>
+			<version>0.3-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
