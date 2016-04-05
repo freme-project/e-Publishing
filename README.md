@@ -1,5 +1,7 @@
 # FREME e-Publishing service
 
+**This repository is deprecated. It has moved to [e-services repository](https://github.com/freme-project/e-services).**
+
 ## Building
 
 ### Requirements
